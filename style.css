@@ -248,3 +248,20 @@ footer {
 #acerca .proyecto .info-personal p {
   margin-bottom: 0; /* evita espacio extra al final */
 }
+
+/* Acerca de mí - caja cuadrada */
+.about-card {
+  width: 420px;      /* más ancho */
+  height: 320px;     /* más alto => sigue siendo cuadrado */
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 15px;     /* un poco de aire interno */
+}
+
+.about-card .perfil p {
+  font-size: 0.95em;
+  line-height: 1.5em; /* un poco más de espacio entre líneas */
+}

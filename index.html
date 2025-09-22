@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Portafolio</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- CANVAS PARA FONDO ANIMADO -->
+  <canvas id="background-canvas"></canvas>
+
+  <!-- HEADER TRANSPARENTE -->
+  <header>
+    <nav>
+      <ul class="menu">
+        <li class="menu-item">
+          <a href="#">Menu ☰</a>
+          <div class="submenu-side">
+            <ul>
+              <li><a href="#inicio">Inicio</a></li>
+              <li><a href="#trabajos">Trabajos</a></li>
+              <li><a href="#acerca">Acerca de mí</a></li>
+              <li><a href="#proyectos">Proyectos</a></li>
+            </ul>
+            <div class="redes">
+              <a href="https://www.instagram.com/arielgonzalez7k/" target="_blank">
+                <img src="assets/icons/instagram.png" alt="Instagram">
+              </a>
+              <a href="https://www.linkedin.com/in/canoezequiel7k-sys/" target="_blank">
+                <img src="assets/icons/linkedin.png" alt="LinkedIn">
+              </a>
+              <a href="https://github.com/canoezequiel7k-sys" target="_blank">
+                <img src="assets/icons/github.png" alt="GitHub">
+              </a>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </nav>
+    <h1 class="titulo-header">Mi Portafolio</h1>
+    <a href="mailto:canoezequiel63@gmail.com" class="contratame">Contrátame</a>
+  </header>
+
+  <!-- SECCIONES -->
+  <main>
+    <!-- SECCION INICIO -->
+    <section id="inicio" class="seccion inicio">
+      <div class="contenido-centrado">
+
+        <!-- PERSONAJE CON ANTEOJOS -->
+        <div class="personaje">
+          <svg width="120" height="60" viewBox="0 0 200 100">
+            <!-- Marco de los anteojos -->
+            <rect x="10" y="20" width="70" height="50" rx="15" ry="15" stroke="#000" stroke-width="4" fill="transparent"/>
+            <rect x="120" y="20" width="70" height="50" rx="15" ry="15" stroke="#000" stroke-width="4" fill="transparent"/>
+            <line x1="80" y1="45" x2="120" y2="45" stroke="#000" stroke-width="4"/>
+
+            <!-- Pupilas (se moverán con JS) -->
+            <circle id="ojo-izq" cx="45" cy="45" r="10" fill="#000"/>
+            <circle id="ojo-der" cx="155" cy="45" r="10" fill="#000"/>
+          </svg>
+        </div>
+
+        <h2>Hola! Soy Ezequiel...</h2><br>
+        <p>Desarrollador Web y Full Stack Junior</p>
+        <p>Construyo y optimizo aplicaciones y sitios web eficientes y adaptables.</p>
+      </div>
+    </section>
+
+    <!-- SECCION DE TRABAJO -->
+    <section id="trabajos" class="seccion trabajos">
+      <div class="contenido-centrado">
+        <h2>Experiencia Laboral</h2><br>
+
+        <!-- Contenedor para 2 cajas lado a lado -->
+        <div class="cajas-dos">
+          <div class="proyecto">
+            <p><b>Full Stack Developer – Carpinteria Lazarte:</b></p>
+            <p>Creación de una aplicación de escritorio para una ferretería, con registro de ventas, control de stock y generación de reportes, utilizando <b>Java, Python + MySQL</b></p>
+          </div>
+
+          <div class="proyecto">
+            <p><b>Full Stack Developer – Hotelera JH, Belgrano:</b></p>
+            <p>Desarrollo de una aplicación de escritorio para la gestión de habitaciones, con reservas, control de ocupación, check-in/check-out y reportes de estadía, utilizando <b>Python + MySQL</b></p>
+          </div>
+        </div><br>
+
+        <h3>Herramientas y Habilidades</h3><br>
+        <div class="proyecto cuadrada">
+          <div class="skills">
+            <p><b>Lenguajes de programación:</b> Python, Java, C#</p>
+            <p><b>Bases de datos:</b> PostgreSQL, MySQL</p>
+            <p><b>Desarrollo web:</b> HTML, CSS, JavaScript</p>
+            <p><b>Frameworks / Mobile:</b> Flutter, Dart</p>
+            <p><b>Idiomas:</b> Inglés (B1), Portugués (A2)</p><br>
+            <p>Manejo de Docker, Vagrant y Linux</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCION ACERCA DE MI -->
+    <section id="acerca" class="seccion acerca">
+      <div class="contenido-centrado">
+        <h2>Acerca de mí</h2><br>
+
+        <div class="proyecto cuadrada">
+          <div class="perfil">
+            <p>
+              Me adapto rápido a nuevas herramientas y proyectos, y siempre busco soluciones eficientes y organizadas.  
+              Disfruto trabajar en equipo y aprender constantemente, buscando que cada proyecto sea de calidad.
+            </p>
+          </div>
+          <div class="info-personal">
+            <p>
+              Tengo 22 años, soy de Argentina y vivo en Avellaneda.  
+              Actualmente estudio Licenciatura en Sistemas en la Universidad Nacional de Lanús (UNLa) y la Tecnicatura en Programación en la Universidad Tecnológica Nacional (UTN).<br><br>
+              <a href="link_a_tu_cv.pdf" target="_blank">Descargar mi CV</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCION PROYECTOS -->
+    <section id="proyectos" class="seccion proyectos">
+      <div class="contenido-centrado">
+        <h2>Proyectos</h2>
+        <div class="proyectos-container">
+          <div class="proyecto">
+            <img src="assets/images/proyecto1.jpg" alt="Proyecto 1">
+            <h3>Aplicacion de Escritorio</h3><br>
+            <p>Aplicación de escritorio para la gestión de habitaciones para Hotelera JH, Belgrano.<br><br> 
+              <a href="https://github.com/canoezequiel7k-sys/BelgranoJH.git" target="_blank">Ver en GitHub</a>
+            </p>
+          </div>
+          <div class="proyecto">
+            <img src="assets/images/proyecto2.jpg" alt="Proyecto 2">
+            <h3>Aplicacion Móvil</h3><br>
+            <p>App sencilla en Flutter para calcular el IMC. Permite ingresar datos y muestra el resultado con una breve descripción. <br><br>
+              <a href="https://github.com/canoezequiel7k-sys/Imc_calculator_app.git" target="_blank">Ver en GitHub</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>Eso fue todo, gracias 😄</p>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -88,11 +88,12 @@ document.addEventListener("DOMContentLoaded", function() {
       this.speedY = speedY;
     }
     draw() {
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(121, 176, 185, 0.6)";
-      ctx.fill();
-    }
+  ctx.beginPath();
+  ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+  // Ahora usa la variable CSS que cambia con el dark mode
+  ctx.fillStyle = getComputedStyle(document.body).getPropertyValue("--particle-color");
+  ctx.fill();
+}
     update() {
       this.x += this.speedX;
       this.y += this.speedY;
@@ -194,5 +195,66 @@ document.addEventListener("DOMContentLoaded", function() {
 // aplicar con distinta intensidad
 addTiltEffect(aboutCard, 8);
 addTiltEffect(certCard, 12); // 💡 un poco más inclinado
+
+
+// ============================
+// DARK MODE TOGGLE
+// ============================
+const darkToggle = document.getElementById("dark-toggle");
+darkToggle.addEventListener("click", () => {
+  document.body.classList.toggle("dark-mode");
+  
+  // Guardar preferencia en localStorage
+  if (document.body.classList.contains("dark-mode")) {
+    localStorage.setItem("theme", "dark");
+  } else {
+    localStorage.setItem("theme", "light");
+  }
+});
+
+// Cargar preferencia guardada
+if (localStorage.getItem("theme") === "dark") {
+  document.body.classList.add("dark-mode");
+}
+
+// ============================
+// Cambiar ícono del botón 🌙/☀️
+// ============================
+function updateToggleIcon() {
+  if (document.body.classList.contains("dark-mode")) {
+    darkToggle.textContent = "🌙"; // en oscuro → mostrar sol (volver a claro)
+  } else {
+    darkToggle.textContent = "☀️"; // en claro → mostrar luna (ir a oscuro)
+  }
+}
+
+// Inicializar icono según el modo actual o guardado
+updateToggleIcon();
+
+// Cada vez que se hace click, actualizamos el ícono también
+darkToggle.addEventListener("click", () => {
+  updateToggleIcon();
+});
+
+// ============================
+// TYPEWRITER EFFECT
+// ============================
+const typewriterText = document.getElementById("typewriter-text");
+const text = "Hola! soy Ezequiel...";
+let i = 0;
+
+function typeWriter() {
+  if (i < text.length) {
+    typewriterText.textContent += text.charAt(i);
+    i++;
+    setTimeout(typeWriter, 120);
+  } else {
+    // cuando termina, sacar cursor
+    typewriterText.style.borderRight = "none";
+  }
+}
+
+// iniciar animación
+typeWriter();
 
 });

@@ -13,35 +13,40 @@
 
   <!-- HEADER TRANSPARENTE -->
   <header>
-    <nav>
-      <ul class="menu">
-        <li class="menu-item">
-          <a href="#">Menu ☰</a>
-          <div class="submenu-side">
-            <ul>
-              <li><a href="#inicio">Inicio</a></li>
-              <li><a href="#trabajos">Trabajos</a></li>
-              <li><a href="#acerca">Acerca de mí</a></li>
-              <li><a href="#proyectos">Proyectos</a></li>
-            </ul>
-            <div class="redes">
-              <a href="https://www.instagram.com/arielgonzalez7k/" target="_blank">
-                <img src="assets/icons/instagram.png" alt="Instagram">
-              </a>
-              <a href="https://www.linkedin.com/in/canoezequiel7k-sys/" target="_blank">
-                <img src="assets/icons/linkedin.png" alt="LinkedIn">
-              </a>
-              <a href="https://github.com/canoezequiel7k-sys" target="_blank">
-                <img src="assets/icons/github.png" alt="GitHub">
-              </a>
-            </div>
+  <nav>
+    <ul class="menu">
+      <li class="menu-item">
+        <a href="#">Menu ☰</a>
+        <div class="submenu-side">
+          <ul>
+            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="#trabajos">Trabajos</a></li>
+            <li><a href="#acerca">Acerca de mí</a></li>
+            <li><a href="#proyectos">Proyectos</a></li>
+          </ul>
+          <div class="redes">
+            <a href="https://www.instagram.com/arielgonzalez7k/" target="_blank">
+              <img src="assets/icons/instagram.png" alt="Instagram">
+            </a>
+            <a href="https://www.linkedin.com/in/canoezequiel7k-sys/" target="_blank">
+              <img src="assets/icons/linkedin.png" alt="LinkedIn">
+            </a>
+            <a href="https://github.com/canoezequiel7k-sys" target="_blank">
+              <img src="assets/icons/github.png" alt="GitHub">
+            </a>
           </div>
-        </li>
-      </ul>
-    </nav>
-    <h1 class="titulo-header">Mi Portafolio</h1>
+        </div>
+      </li>
+    </ul>
+  </nav>
+
+  <h1 class="titulo-header">Mi Portafolio</h1>
+
+  <div class="acciones-header">
     <a href="mailto:canoezequiel63@gmail.com" class="contratame">Contrátame</a>
-  </header>
+    <button id="dark-toggle" aria-label="Cambiar tema">🌙</button>
+  </div>
+</header>
 
   <!-- SECCIONES -->
   <main>
@@ -63,7 +68,7 @@
           </svg>
         </div>
 
-        <h2 class="fade-text delay1">Hola! Soy Ezequiel...</h2>
+        <h2 class="typewriter" id="typewriter-text"></h2>
         <p class="fade-text delay2">Desarrollador Web y Full Stack Junior</p>
         <p class="fade-text delay3">Construyo y optimizo aplicaciones y sitios web eficientes y adaptables.</p>
       </div>
@@ -224,9 +229,16 @@
       </div>
     </section>
 
-    <footer>
-      <p>TEXTO OCULTO XD</p>
-    </footer>
+    <footer id="contacto" class="seccion footer-seccion">
+  <div class="contenido-centrado">
+    <p>© 2025 Ezequiel Cano · Desarrollador Web</p>
+    <div class="redes-footer">
+      <a href="https://github.com/canoezequiel7k-sys" target="_blank">GitHub</a> ·
+      <a href="https://www.linkedin.com/in/canoezequiel7k-sys/" target="_blank">LinkedIn</a> ·
+      <a href="mailto:canoezequiel63@gmail.com">Email</a>
+    </div>
+  </div>
+</footer>
   </main>
 
   <script src="script.js"></script>

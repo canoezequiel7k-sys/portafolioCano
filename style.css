@@ -5,6 +5,13 @@
   box-sizing: border-box;
   font-family: 'Poppins', Arial, sans-serif;
 }
+/* Transición suave entre Light/Dark Mode */
+body, header, .contratame, 
+.about-card, .certificaciones-container, 
+.proyecto, .titulo-header, 
+.submenu-side, .submenu-side ul li a {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
 
 body {
   overflow-x: hidden;
@@ -718,4 +725,194 @@ footer {
   #trabajos.seccion {
     padding-bottom: 40px;    /* espacio extra al final */
   }
+}
+
+/* ============================ */
+/*   AJUSTE PROYECTOS EN MÓVIL  */
+/* ============================ */
+@media (max-width: 768px) {
+  .proyecto {
+    transform: scale(0.9);
+    transform-origin: top center;
+    margin-bottom: 20px;
+  }
+
+  .proyecto img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  #trabajos.seccion {
+    padding-bottom: 40px;
+  }
+}
+
+/* ============================ */
+/*   DARK MODE                  */
+/* ============================ */
+body.dark-mode {
+  background-color: #121212;
+  color: #f5f5f5;
+}
+
+body.dark-mode header {
+  background-color: rgba(18, 18, 18, 0.8);
+  border-bottom: 1px solid #444;
+}
+
+body.dark-mode .contratame {
+  background-color: #90caf9;
+  color: #000;
+}
+body.dark-mode .contratame:hover {
+  background-color: #64b5f6;
+}
+
+/* Ajuste tarjetas */
+body.dark-mode .about-card,
+body.dark-mode .certificaciones-container,
+body.dark-mode .proyecto {
+  background: rgba(30, 30, 30, 0.9);
+  color: #f5f5f5;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+}
+
+body.dark-mode .cert-link {
+  color: #90caf9;
+}
+body.dark-mode .cert-link:hover {
+  color: #64b5f6;
+}
+
+/* Botón Dark Mode */
+#dark-toggle {
+  margin-left: 15px;
+  background: none;
+  border: none;
+  font-size: 1.4em;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background 0.3s, transform 0.2s;
+}
+
+#dark-toggle:hover {
+  background: rgba(96, 125, 139, 0.2);
+  transform: scale(1.1);
+}
+
+body.dark-mode #dark-toggle {
+  color: #ffd54f; /* amarillo suave en dark */
+}
+
+/* Partículas */
+:root {
+  --particle-color: rgba(121, 176, 185, 0.6); /* celestito */
+}
+
+body.dark-mode {
+  --particle-color: rgba(255, 223, 0, 0.7);   /* amarillo */
+}
+/* ============================ */
+/*   AJUSTE MENÚ LATERAL DARK   */
+/* ============================ */
+body.dark-mode .submenu-side {
+  background-color: rgba(18, 18, 18, 0.95);
+}
+
+body.dark-mode .submenu-side ul li a {
+  color: #f5f5f5; /* texto claro */
+}
+
+body.dark-mode .submenu-side ul li a:hover {
+  color: #90caf9; /* azulito en hover */
+}
+
+body.dark-mode .submenu-side .redes a img {
+  filter: brightness(1.2); /* aclarar íconos */
+}
+
+/* Color del botón del menú en Dark Mode */
+body.dark-mode nav ul.menu li a {
+  color: #f5f5f5; /* blanco */
+}
+
+body.dark-mode nav ul.menu li a:hover {
+  color: #90caf9; /* azulito */
+}
+
+body.dark-mode .submenu-side .redes a img {
+  filter: brightness(0) invert(1); /* los vuelve blancos */
+}
+/* Título del header en Dark Mode */
+body.dark-mode .titulo-header {
+  color: #f5f5f5;
+}
+
+/* Efecto typewriter */
+
+.typewriter {
+  display: inline-block;
+  border-right: 2px solid #607d8b; /* cursor */
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: 2em;
+  font-weight: 600;
+  animation: blinkCursor 0.7s steps(1) infinite;
+}
+
+@keyframes blinkCursor {
+  0%, 50% { border-color: #607d8b; }
+  51%, 100% { border-color: transparent; }
+}
+
+/* ============================ */
+/*   FOOTER SECCION             */
+/* ============================ */
+.footer-seccion {
+  min-height: 180px;
+  background-color: #d6d6d6;
+  color: #222;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.footer-seccion p {
+  margin-bottom: 10px;
+  font-size: 0.95em;
+}
+
+.redes-footer {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.redes-footer a {
+  text-decoration: none;
+  color: #222;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.redes-footer a:hover {
+  color: #607d8b;
+}
+
+/* Dark Mode para el footer */
+body.dark-mode .footer-seccion {
+  background-color: #121212;
+  color: #f5f5f5;
+}
+
+body.dark-mode .redes-footer a {
+  color: #f5f5f5;
+}
+
+body.dark-mode .redes-footer a:hover {
+  color: #90caf9;
 }

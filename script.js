@@ -1,5 +1,3 @@
-// SCRIPT.JS
-
 document.addEventListener("DOMContentLoaded", function() {
 
   const menuItem = document.querySelector(".menu-item");
@@ -30,38 +28,13 @@ document.addEventListener("DOMContentLoaded", function() {
       menuItem.classList.remove("active");
       const targetId = this.getAttribute("href").substring(1);
       const targetSection = document.getElementById(targetId);
-      scrollToSection(targetSection);
+      targetSection.scrollIntoView({ behavior: "smooth" });
     });
   });
 
   // ============================
-  // SCROLL SNAP + ANIMACIONES
+  // ANIMACIONES AL HACER SCROLL
   // ============================
-  let isScrolling = false;
-
-  main.addEventListener("wheel", function(e) {
-    e.preventDefault();
-    if (isScrolling) return;
-    isScrolling = true;
-
-    const delta = e.deltaY;
-    let currentIndex = Array.from(sections).findIndex(
-      sec => sec.getBoundingClientRect().top >= -10
-    );
-
-    if (delta > 0 && currentIndex < sections.length - 1) currentIndex++;
-    else if (delta < 0 && currentIndex > 0) currentIndex--;
-
-    const nextSection = sections[currentIndex];
-    scrollToSection(nextSection);
-  }, { passive: false });
-
-  function scrollToSection(section) {
-    section.scrollIntoView({ behavior: "smooth" });
-    section.classList.add("visible");
-    setTimeout(() => { isScrolling = false; }, 800);
-  }
-
   function handleScroll() {
     const scrollMiddle = window.innerHeight / 2;
 
@@ -190,5 +163,36 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   window.addEventListener("mousemove", moverOjos);
+
+  // ============================
+  // EFECTO INTERACTIVO EN ABOUT Y CERTIFICACIONES
+  // ============================
+  const aboutCard = document.querySelector(".about-card");
+  const certCard = document.querySelector(".certificaciones-container");
+
+  function addTiltEffect(card, intensity = 12) {
+  if (!card) return;
+  card.addEventListener("mousemove", (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotateX = ((y - centerY) / centerY) * intensity;
+    const rotateY = ((x - centerX) / centerX) * -intensity;
+
+    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+  });
+
+  card.addEventListener("mouseleave", () => {
+    card.style.transform = "rotateX(0) rotateY(0) scale(1)";
+  });
+}
+
+// aplicar con distinta intensidad
+addTiltEffect(aboutCard, 8);
+addTiltEffect(certCard, 12); // 💡 un poco más inclinado
 
 });

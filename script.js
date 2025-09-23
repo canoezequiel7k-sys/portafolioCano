@@ -203,13 +203,19 @@ addTiltEffect(certCard, 12); // 💡 un poco más inclinado
 const darkToggle = document.getElementById("dark-toggle");
 darkToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark-mode");
-  
+
+  // animación de ícono
+  darkToggle.classList.add("animate");
+  setTimeout(() => darkToggle.classList.remove("animate"), 600);
+
   // Guardar preferencia en localStorage
   if (document.body.classList.contains("dark-mode")) {
     localStorage.setItem("theme", "dark");
   } else {
     localStorage.setItem("theme", "light");
   }
+
+  updateToggleIcon(); // ✅ para mantener el cambio de sol/luna
 });
 
 // Cargar preferencia guardada

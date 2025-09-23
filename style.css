@@ -47,13 +47,18 @@ header {
   border-bottom: 1px solid #ccc;
 }
 
+/* TÍTULO CENTRADO */
 header .titulo-header {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   font-size: 1.5em;
-  color: #222;
   font-weight: 600;
+  margin: 0;
+  color: #222;
 }
 
-/* BOTON CONTRATAME */
+/* BOTÓN CONTRÁTAME */
 header .contratame {
   color: #fff;
   background-color: #607d8b;

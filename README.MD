@@ -1,2 +1,2 @@
-Este es mi portafolio para ir subiendo proyectos y actualizaciones de trabajo, sumas experiencia de herramientas y habilidades nuevas, etc...
+IR MODIFICANDO:::
 

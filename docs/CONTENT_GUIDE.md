@@ -8,6 +8,8 @@
 
 Los campos narrativos usan `Localized`, con claves requeridas `es` y `en`. Fechas, URLs, nombres de tecnologías y archivos son valores no localizados cuando no deben traducirse. No añadas texto visible en el renderer o en una interacción: incorpora una entrada al contenido tipado.
 
+El enlace de idioma también se define en `src/content/ui.ts`; cada ruta incluye `hreflang` y `lang` para el idioma de destino.
+
 ## Traducciones
 
 El español es predeterminado. El inglés actual es borrador y está marcado en `/en/`; no debe publicarse hasta aprobación de Ezequiel. Mantén cada traducción junto a su original, conserva nombres propios y no agregues credenciales, fechas, logros ni equivalencias académicas que no hayan sido confirmadas.

@@ -12,6 +12,15 @@
 | Conservar rutas actuales de PDF y assets   | Evita romper URLs potencialmente compartidas.                                                                                     | Implementado       |
 | Netlify publica `dist/` en build           | Proveedor confirmado; la configuración no se ha desplegado desde esta rama.                                                       | Preliminar         |
 
+## Fase 2
+
+| Decisión                                | Motivo                                                                                      | Estado       |
+| --------------------------------------- | ------------------------------------------------------------------------------------------- | ------------ |
+| Conservar el scroll dentro de `main`    | Mantiene el comportamiento legacy de navegación y reveal mientras se hace fluido el layout. | Implementado |
+| Permitir que las secciones crezcan      | El contenido no se recorta en móvil, apaisado o con texto más largo.                        | Implementado |
+| Selector ES/EN como enlace con fallback | Funciona sin JavaScript y anuncia idioma de destino con `hreflang` y `lang`.                | Implementado |
+| Mantener EN como borrador               | El enlace no constituye aprobación editorial ni habilita indexación.                        | Sin cambios  |
+
 ## Propiedad de animaciones
 
 Cada propiedad animada debe tener un único propietario salvo coordinación documentada. Propuesta a validar antes de migrar:

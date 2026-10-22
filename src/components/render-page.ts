@@ -78,18 +78,23 @@ export function renderPage(locale: Locale): string {
       <nav aria-label="${escapeHtml(copy.navigationLabel)}">
         <ul class="menu">
           <li class="menu-item">
-            <a href="#" aria-label="${escapeHtml(copy.menu)}">${escapeHtml(copy.menu)}</a>
-            <div class="submenu-side">
+            <button
+              class="menu-toggle"
+              type="button"
+              aria-controls="side-navigation"
+              aria-expanded="false"
+            >${escapeHtml(copy.menu)}</button>
+            <div class="submenu-side" id="side-navigation" aria-hidden="true" inert>
               <ul>
-                <li><a href="#inicio">${escapeHtml(copy.home)}</a></li>
-                <li><a href="#trabajos">${escapeHtml(copy.experience)}</a></li>
-                <li><a href="#acerca">${escapeHtml(copy.about)}</a></li>
-                <li><a href="#proyectos">${escapeHtml(copy.projects)}</a></li>
+                <li><a href="#inicio" tabindex="-1">${escapeHtml(copy.home)}</a></li>
+                <li><a href="#trabajos" tabindex="-1">${escapeHtml(copy.experience)}</a></li>
+                <li><a href="#acerca" tabindex="-1">${escapeHtml(copy.about)}</a></li>
+                <li><a href="#proyectos" tabindex="-1">${escapeHtml(copy.projects)}</a></li>
               </ul>
               <div class="redes">
-                <a href="https://www.instagram.com/canoezequiel7k/" target="_blank"><img src="/assets/icons/instagram.png" alt="${escapeHtml(copy.instagram)}"></a>
-                <a href="https://www.linkedin.com/in/canoezequiel7k-sys/" target="_blank"><img src="/assets/icons/linkedin.png" alt="${escapeHtml(copy.linkedin)}"></a>
-                <a href="https://github.com/canoezequiel7k-sys" target="_blank"><img src="/assets/icons/github.png" alt="${escapeHtml(copy.github)}"></a>
+                <a href="https://www.instagram.com/canoezequiel7k/" target="_blank" rel="noreferrer" tabindex="-1"><img src="/assets/icons/instagram.png" alt="${escapeHtml(copy.instagram)}"></a>
+                <a href="https://www.linkedin.com/in/canoezequiel7k-sys/" target="_blank" rel="noreferrer" tabindex="-1"><img src="/assets/icons/linkedin.png" alt="${escapeHtml(copy.linkedin)}"></a>
+                <a href="https://github.com/canoezequiel7k-sys" target="_blank" rel="noreferrer" tabindex="-1"><img src="/assets/icons/github.png" alt="${escapeHtml(copy.github)}"></a>
               </div>
             </div>
           </li>
@@ -103,13 +108,19 @@ export function renderPage(locale: Locale): string {
           href="${locale === "es" ? "/en/" : "/"}"
           hreflang="${locale === "es" ? "en" : "es"}"
           lang="${locale === "es" ? "en" : "es"}"
-          aria-label="${escapeHtml(copy.switchLanguage)}"
         >${escapeHtml(copy.languageLink)}</a>
-        <button id="dark-toggle" aria-label="${escapeHtml(copy.changeTheme)}">🌙</button>
+        <button
+          id="dark-toggle"
+          type="button"
+          aria-label="${escapeHtml(copy.activateDarkMode)}"
+          aria-pressed="false"
+          data-label-light="${escapeHtml(copy.activateDarkMode)}"
+          data-label-dark="${escapeHtml(copy.activateLightMode)}"
+        >🌙</button>
       </div>
     </header>
     <main>
-      <section id="inicio" class="seccion inicio">
+      <section id="inicio" class="seccion inicio" tabindex="-1">
         <div class="contenido-centrado">
           <div class="personaje" aria-hidden="true">
             <svg width="120" height="60" viewBox="0 0 200 100">
@@ -120,23 +131,26 @@ export function renderPage(locale: Locale): string {
               <circle id="ojo-der" cx="155" cy="45" r="10" fill="#000"/>
             </svg>
           </div>
-          <h2 class="typewriter" id="typewriter-text" data-text="${text(intro, locale)}"></h2>
+          <h2 class="typewriter" id="typewriter-text" data-text="${text(intro, locale)}" aria-label="${text(intro, locale)}" aria-live="off"></h2>
           <p class="fade-text delay2">${text(profile.role, locale)}</p>
           <p class="fade-text delay3">${text(profile.summary, locale)}</p>
         </div>
       </section>
-      <section id="trabajos" class="seccion trabajos">
+      <section id="trabajos" class="seccion trabajos" tabindex="-1">
         <div class="contenido-centrado">
           <h2>${escapeHtml(copy.workHistory)}</h2><br>
           <div class="cajas-dos">${experiences}</div><br>
           <h3>${escapeHtml(copy.skills)}</h3><br>
           <div class="skills-marquee" aria-label="${escapeHtml(copy.skills)}">
-            <div class="marquee-content">${skills}${repeatedSkills}</div>
+            <div class="marquee-content">
+              <div class="marquee-group">${skills}</div>
+              <div class="marquee-group" aria-hidden="true">${repeatedSkills}</div>
+            </div>
           </div>
           <div class="skills-text">${skillGroups}</div>
         </div>
       </section>
-      <section id="acerca" class="seccion acerca">
+      <section id="acerca" class="seccion acerca" tabindex="-1">
         <div class="contenido-centrado">
           <h2>${escapeHtml(copy.about)}</h2><br>
           <div class="about-card">
@@ -161,7 +175,7 @@ export function renderPage(locale: Locale): string {
           </div>
         </div>
       </section>
-      <section id="proyectos" class="seccion proyectos">
+      <section id="proyectos" class="seccion proyectos" tabindex="-1">
         <div class="contenido-centrado">
           <h2>${escapeHtml(copy.projects)}</h2>
           <div class="proyectos-container">${projects}</div>

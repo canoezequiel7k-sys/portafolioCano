@@ -22,6 +22,28 @@ const mimeTypes: Readonly<Record<string, string>> = {
   ".png": "image/png",
   ".svg": "image/svg+xml",
 };
+const localeBootstrap = `<script>
+  (() => {
+    try {
+      const preferredLocale = localStorage.getItem("preferred-locale");
+      const crawler = /bot|crawler|spider|slurp/i.test(navigator.userAgent);
+      if (location.pathname === "/" && preferredLocale === "en" && !crawler) {
+        location.replace(\`/en/\${location.search}\${location.hash}\`);
+      }
+    } catch (error) {
+      console.warn("Could not read the saved language preference.", error);
+    }
+  })();
+</script>`;
+const themeBootstrap = `<script>
+  try {
+    if (localStorage.getItem("theme") === "dark") {
+      document.body.classList.add("dark-mode");
+    }
+  } catch (error) {
+    console.warn("Could not read the saved theme preference.", error);
+  }
+</script>`;
 
 async function listFiles(directory: string): Promise<string[]> {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -43,6 +65,8 @@ function localizedPages(): Plugin {
         const locale = resolveLocale(context.path);
         const page = html
           .replace('<html lang="es">', `<html lang="${locale}">`)
+          .replace("<!--locale-bootstrap-->", localeBootstrap)
+          .replace("<!--theme-bootstrap-->", themeBootstrap)
           .replace("__PAGE_TITLE__", escapeHtml(ui[locale].pageTitle))
           .replace("<!--portfolio-body-->", renderPage(locale));
         return locale === "en"
@@ -72,7 +96,7 @@ function localizedPages(): Plugin {
           .replace(/<title>[\s\S]*?<\/title>/, `<title>${escapeHtml(ui.en.pageTitle)}</title>`)
           .replace(
             /<body>[\s\S]*?<\/body>/,
-            `<body>\n${renderPage("en")}\n${moduleScript}\n</body>`,
+            `<body>\n${themeBootstrap}\n${renderPage("en")}\n${moduleScript}\n</body>`,
           )
           .replace("</head>", '<meta name="robots" content="noindex, nofollow" /></head>');
         this.emitFile({

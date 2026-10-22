@@ -31,3 +31,5 @@ Edita `src/content/profile.ts` para el perfil y `src/content/ui.ts` para interfa
 Consulta [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md), [docs/CONTENT_GUIDE.md](./docs/CONTENT_GUIDE.md) y [docs/DECISIONS.md](./docs/DECISIONS.md).
 
 La migración conserva por ahora `style.css`, `script.js`, `assets/` y los nombres actuales de PDF para no romper rutas existentes. No desplegar desde esta rama: Netlify usa `main` para producción.
+
+La aplicación servida por Vite inicializa las interacciones desde `src/features/`; el `index.html` y `script.js` de la raíz se conservan juntos como entrada legacy independiente.

@@ -58,7 +58,7 @@ main {
   padding-top: var(--header-height);
   overflow-x: clip;
   overflow-y: auto;
-  scroll-snap-type: y proximity;
+  scroll-snap-type: y mandatory;
 }
 
 .seccion {
@@ -67,7 +67,7 @@ main {
   min-height: calc(100dvh - var(--header-height));
   padding: clamp(1.5rem, 5vh, 3.5rem) clamp(1rem, 4vw, 3rem);
   scroll-snap-align: start;
-  scroll-snap-stop: normal;
+  scroll-snap-stop: always;
 }
 
 .seccion:nth-child(even) {
@@ -254,7 +254,6 @@ body.dark-mode .language-switch:hover {
   .seccion {
     min-height: calc(100dvh - var(--header-height));
     padding: 1.25rem clamp(0.5rem, 3vw, 1.25rem);
-    scroll-snap-align: none;
   }
 
   .contenido-centrado {

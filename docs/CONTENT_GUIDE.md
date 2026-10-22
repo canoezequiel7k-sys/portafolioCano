@@ -8,7 +8,7 @@
 
 Los campos narrativos usan `Localized`, con claves requeridas `es` y `en`. Fechas, URLs, nombres de tecnologías y archivos son valores no localizados cuando no deben traducirse. No añadas texto visible en el renderer o en una interacción: incorpora una entrada al contenido tipado.
 
-El enlace de idioma también se define en `src/content/ui.ts`; cada ruta incluye `hreflang` y `lang` para el idioma de destino.
+El enlace de idioma también se define en `src/content/ui.ts`; cada ruta incluye `hreflang` y `lang` para el idioma de destino. Tras una selección explícita se guarda la preferencia y `/` puede redirigir a `/en/`; no se usa detección del idioma del navegador. La elección se excluye para crawlers.
 
 ## Traducciones
 

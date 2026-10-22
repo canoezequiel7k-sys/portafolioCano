@@ -16,7 +16,9 @@ Aplicación estática sin framework UI. Vite sirve y compila el documento; TypeS
 
 ## Build e idioma
 
-`npm run dev` sirve español en `/` e inglés en `/en/`. `npm run build` produce `dist/index.html`, `dist/en/index.html`, bundle JS/CSS, `assets/` y los cuatro PDF. Los documentos EN llevan `noindex,nofollow` y un aviso de borrador hasta aprobación editorial. No existe redirección automática por idioma.
+`npm run dev` sirve español en `/` e inglés en `/en/`. `npm run build` produce `dist/index.html`, `dist/en/index.html`, bundle JS/CSS, assets optimizados, favicon y los cuatro PDF. Los documentos EN llevan `noindex,nofollow` y un aviso de borrador hasta aprobación editorial. No existe redirección automática por idioma.
+
+Los metadatos localizados se generan con el build. `SITE_URL` establece el origen HTTPS canónico; en Netlify se usa `URL` como respaldo. Sin ambas variables, canonical, alternates, `og:url`, `sitemap.xml` y su referencia en `robots.txt` se omiten.
 
 El renderer comparte IDs y estructura de secciones entre ambos locales. Los recursos usan rutas desde la raíz para que funcionen también bajo `/en/`. El selector conserva sección y tema; la preferencia de idioma solo se guarda tras una elección explícita y la redirección de `/` excluye crawlers. La intro no se repite al cambiar de idioma. Los documentos EN continúan como borrador `noindex`.
 
@@ -24,7 +26,7 @@ El renderer comparte IDs y estructura de secciones entre ambos locales. Los recu
 
 ESLint, Prettier, `tsc --noEmit`, dependency-cruiser, Vitest y Playwright + axe tienen comandos separados. Playwright prueba tanto Vite dev como el build servido por `vite preview`. El canvas pausa en segundo plano, escala por `devicePixelRatio` y mantiene sus partículas al redimensionar. Las animaciones respetan `prefers-reduced-motion`; View Transitions son mejora progresiva con navegación/cambio CSS de respaldo.
 
-Las pruebas E2E comprueban ambos idiomas, los ocho viewports, accesibilidad axe, navegación por teclado, persistencia de tema/idioma, cambio de idioma conservando sección, typewriter, marquee, puntero y táctil, reduced motion y dimensiones del canvas.
+Las pruebas E2E comprueban ambos idiomas, metadatos y rutas, imágenes con dimensiones/alt/carga diferida, los ocho viewports, accesibilidad axe en temas claro y oscuro, skip-link, navegación por teclado, persistencia de tema/idioma, cambio de idioma conservando sección, typewriter, marquee, puntero y táctil, reduced motion y dimensiones del canvas.
 
 ## Archivos principales
 

@@ -53,17 +53,17 @@ export function renderPage(locale: Locale): string {
   const certifications = profile.certifications
     .map(
       (item) =>
-        `<li><a href="${escapeHtml(item.document)}" target="_blank" class="cert-link">${text(item.title, locale)}</a></li>`,
+        `<li><a href="${escapeHtml(item.document)}" target="_blank" rel="noopener noreferrer" class="cert-link">${text(item.title, locale)}</a></li>`,
     )
     .join("");
   const projects = profile.projects
     .map(
-      (project, index) => `
+      (project) => `
         <div class="proyecto">
-          <img src="${escapeHtml(project.image)}" alt="${escapeHtml(index === 0 ? copy.desktopProjectAlt : copy.mobileProjectAlt)}">
+          <img src="${escapeHtml(project.image)}" alt="${text(project.imageAlt, locale)}" width="${project.imageWidth}" height="${project.imageHeight}" loading="lazy" decoding="async">
           <h3>${text(project.title, locale)}</h3><br>
           <p>${text(project.description, locale)}<br><br>
-            <a href="${escapeHtml(project.repository)}" target="_blank">${escapeHtml(copy.viewOnGitHub)}</a>
+            <a href="${escapeHtml(project.repository)}" target="_blank" rel="noopener noreferrer">${escapeHtml(copy.viewOnGitHub)}</a>
           </p>
         </div>`,
     )
@@ -74,6 +74,7 @@ export function renderPage(locale: Locale): string {
 
   return `
     <canvas id="background-canvas" aria-hidden="true"></canvas>
+    <a class="skip-link" href="#inicio">${escapeHtml(copy.skipToContent)}</a>
     <header>
       <nav aria-label="${escapeHtml(copy.navigationLabel)}">
         <ul class="menu">
@@ -100,7 +101,7 @@ export function renderPage(locale: Locale): string {
           </li>
         </ul>
       </nav>
-      <h1 class="titulo-header">${escapeHtml(copy.pageTitle)}</h1>
+      <h1 class="titulo-header">${escapeHtml(copy.ownerName)}</h1>
       <div class="acciones-header">
         <a href="mailto:canoezequiel63@gmail.com" class="contratame">${escapeHtml(copy.contact)}</a>
         <a
@@ -154,7 +155,7 @@ export function renderPage(locale: Locale): string {
         <div class="contenido-centrado">
           <h2>${escapeHtml(copy.about)}</h2><br>
           <div class="about-card">
-            <div class="about-left"><img src="/assets/images/foto-perfil.jpg" alt="${escapeHtml(copy.profilePhotoAlt)}" class="perfil-img"></div>
+            <div class="about-left"><img src="/assets/images/foto-perfil.webp" alt="${escapeHtml(copy.profilePhotoAlt)}" class="perfil-img" width="960" height="960" loading="lazy" decoding="async"></div>
             <div class="about-right">
               <h3 class="fade-text delay1">${escapeHtml(copy.aboutHeading)}</h3>
               <p class="fade-text delay2">${text(profile.about, locale)}</p>
@@ -185,8 +186,8 @@ export function renderPage(locale: Locale): string {
         <div class="contenido-centrado">
           <p>${escapeHtml(copy.footer)}</p>
           <div class="redes-footer">
-            <a href="https://github.com/canoezequiel7k-sys" target="_blank">${escapeHtml(copy.github)}</a> ·
-            <a href="https://www.linkedin.com/in/canoezequiel7k-sys/" target="_blank">${escapeHtml(copy.linkedin)}</a> ·
+            <a href="https://github.com/canoezequiel7k-sys" target="_blank" rel="noopener noreferrer">${escapeHtml(copy.github)}</a> ·
+            <a href="https://www.linkedin.com/in/canoezequiel7k-sys/" target="_blank" rel="noopener noreferrer">${escapeHtml(copy.linkedin)}</a> ·
             <a href="mailto:canoezequiel63@gmail.com">${escapeHtml(copy.email)}</a>
           </div>
         </div>

@@ -87,12 +87,19 @@ main {
 
 .inicio,
 .acerca {
-  --section-background: rgba(245, 245, 245, 0.68);
+  --section-background: rgba(245, 245, 245, 0.58);
 }
 
 .trabajos,
 .proyectos {
-  --section-background: rgba(233, 236, 239, 0.68);
+  --section-background: rgba(233, 236, 239, 0.58);
+}
+
+main > .inicio,
+main > .trabajos,
+main > .acerca,
+main > .proyectos {
+  background-color: var(--section-background);
 }
 
 .contenido-centrado {
@@ -216,7 +223,7 @@ body.dark-mode .proyectos {
 }
 
 .footer-seccion {
-  --section-background: rgba(214, 214, 214, 0.72);
+  --section-background: rgba(214, 214, 214, 0.62);
 }
 
 body.dark-mode .footer-seccion {

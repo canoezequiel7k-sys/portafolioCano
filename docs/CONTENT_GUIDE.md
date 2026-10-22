@@ -3,8 +3,13 @@
 ## Dónde editar
 
 - Perfil y datos del portafolio: `src/content/profile.ts`.
-- Textos de interfaz, metadatos iniciales y textos accesibles: `src/content/ui.ts`.
+- Textos de interfaz, títulos y textos accesibles: `src/content/ui.ts`.
 - Tipos que fuerzan los dos idiomas: `src/types/content.ts`.
+- Las descripciones SEO y Open Graph usan el resumen localizado de `src/content/profile.ts`.
+- Los textos alternativos de las capturas pertenecen a cada proyecto en `src/content/profile.ts`.
+- Las imágenes WebP nuevas se mantienen junto a los JPG originales para no romper rutas existentes. Los PDFs se optimizan sin cambiar sus nombres ni enlaces.
+
+Para el build público, configurá `SITE_URL` con el origen HTTPS del sitio. En Netlify se usa `URL` como respaldo; `SITE_URL` permite fijar el dominio canónico personalizado. Sin ambos valores no se emiten canonical, alternates, `og:url`, sitemap ni la referencia al sitemap en `robots.txt`. No uses una URL local ni de preview.
 
 Los campos narrativos usan `Localized`, con claves requeridas `es` y `en`. Fechas, URLs, nombres de tecnologías y archivos son valores no localizados cuando no deben traducirse. No añadas texto visible en el renderer o en una interacción: incorpora una entrada al contenido tipado.
 

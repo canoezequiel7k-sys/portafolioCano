@@ -1,0 +1,333 @@
+:root {
+  --header-height: 3.75rem;
+}
+
+body {
+  color: var(--color-text);
+  background: var(--color-page);
+}
+
+header {
+  height: var(--header-height);
+  padding-inline: clamp(0.75rem, 2vw, 1.875rem);
+  gap: 1rem;
+}
+
+header .titulo-header {
+  max-width: 40%;
+  font-size: clamp(1.05rem, 1.5vw, 1.5rem);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.acciones-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(0.25rem, 1vw, 0.75rem);
+  margin-left: auto;
+}
+
+header .contratame {
+  padding: 0.5rem clamp(0.5rem, 1vw, 0.9375rem);
+  white-space: nowrap;
+}
+
+.language-switch {
+  display: inline-flex;
+  min-height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 0.5rem;
+  border-radius: 0.375rem;
+  color: var(--color-text);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.language-switch:hover {
+  color: var(--color-accent-hover);
+  text-decoration: underline;
+}
+
+main {
+  height: 100vh;
+  height: 100dvh;
+  padding-top: var(--header-height);
+  overflow-x: clip;
+  overflow-y: auto;
+  scroll-snap-type: y proximity;
+}
+
+.seccion {
+  width: 100%;
+  height: auto;
+  min-height: calc(100dvh - var(--header-height));
+  padding: clamp(1.5rem, 5vh, 3.5rem) clamp(1rem, 4vw, 3rem);
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+}
+
+.seccion:nth-child(even) {
+  background-color: rgba(224, 224, 224, 0.24);
+}
+
+.contenido-centrado {
+  width: min(100%, 72rem);
+  max-width: 72rem;
+  margin-inline: auto;
+  padding: clamp(0.5rem, 2vw, 1.25rem);
+}
+
+#inicio .contenido-centrado {
+  width: min(100%, 56rem);
+}
+
+#inicio .typewriter {
+  max-width: 100%;
+  font-size: clamp(1.15rem, 4vw, 2rem);
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.cajas-dos {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.75rem, 2vw, 1.25rem);
+}
+
+.cajas-dos > .proyecto,
+.proyectos-container > .proyecto {
+  min-width: 0;
+  width: auto;
+  max-width: none;
+  margin: 0;
+  overflow-wrap: anywhere;
+  transform: none;
+}
+
+.proyecto img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+.skills-marquee {
+  width: 100%;
+  margin-inline: 0;
+  overflow: hidden;
+}
+
+.about-card {
+  display: grid;
+  width: min(100%, 56rem);
+  height: auto;
+  grid-template-columns: minmax(9rem, 0.7fr) minmax(0, 1.3fr);
+  align-items: center;
+  gap: clamp(1rem, 4vw, 2rem);
+  padding: clamp(1rem, 4vw, 2rem);
+  overflow: visible;
+  text-align: left;
+}
+
+.about-left {
+  display: grid;
+  justify-items: center;
+}
+
+.about-left .perfil-img {
+  display: block;
+  width: min(100%, 12.5rem);
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.about-right {
+  min-width: 0;
+}
+
+.about-info li {
+  flex-wrap: wrap;
+  overflow-wrap: anywhere;
+}
+
+.cv-container,
+.card-wrapper {
+  width: min(100%, 56rem);
+  margin-inline: auto;
+}
+
+.certificaciones-container {
+  margin-top: clamp(1rem, 3vw, 2rem);
+}
+
+.cert-list li {
+  min-width: 0;
+  flex-wrap: wrap;
+  overflow-wrap: anywhere;
+}
+
+.proyectos-container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+.footer-seccion {
+  min-height: 0;
+  padding: 1.5rem clamp(1rem, 4vw, 3rem);
+}
+
+body.dark-mode .seccion:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.035);
+}
+
+body.dark-mode .language-switch {
+  color: #f5f5f5;
+}
+
+body.dark-mode .language-switch:hover {
+  color: #90caf9;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --header-height: 5.5rem;
+  }
+
+  header {
+    display: grid;
+    grid-template-areas:
+      "navigation actions"
+      "title title";
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto auto;
+    align-content: center;
+    justify-content: stretch;
+    gap: 0.125rem 0.5rem;
+    padding: 0.375rem 0.75rem;
+  }
+
+  header nav {
+    grid-area: navigation;
+    min-width: 0;
+  }
+
+  nav ul.menu li a {
+    padding: 0.5rem;
+  }
+
+  header .titulo-header {
+    position: static;
+    grid-area: title;
+    max-width: none;
+    transform: none;
+    font-size: 1.125rem;
+    line-height: 1.25;
+    white-space: normal;
+  }
+
+  .acciones-header {
+    grid-area: actions;
+    gap: 0.25rem;
+  }
+
+  header .contratame {
+    padding: 0.45rem 0.55rem;
+    font-size: 0.875rem;
+  }
+
+  .language-switch {
+    min-height: 2.25rem;
+    padding-inline: 0.375rem;
+    font-size: 0.8125rem;
+  }
+
+  #dark-toggle {
+    margin-left: 0;
+    padding: 0.375rem;
+  }
+
+  .seccion {
+    min-height: calc(100dvh - var(--header-height));
+    padding: 1.25rem clamp(0.5rem, 3vw, 1.25rem);
+    scroll-snap-align: none;
+  }
+
+  .contenido-centrado {
+    padding: 0.5rem;
+  }
+
+  .cajas-dos,
+  .proyectos-container {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .about-card {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: stretch;
+    gap: 1rem;
+    padding: clamp(0.875rem, 4vw, 1.25rem);
+    text-align: center;
+  }
+
+  .about-left .perfil-img {
+    width: clamp(7rem, 35vw, 9.375rem);
+  }
+
+  .about-right {
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .about-info li {
+    justify-content: center;
+  }
+
+  .certificaciones-container {
+    padding: clamp(0.75rem, 4vw, 1.25rem);
+  }
+
+  .cert-list li {
+    justify-content: center;
+  }
+
+  .footer-seccion {
+    min-height: 0;
+    padding: 1.25rem 0.75rem;
+  }
+}
+
+@media (max-width: 360px) {
+  header {
+    padding-inline: 0.5rem;
+  }
+
+  .acciones-header {
+    gap: 0.125rem;
+  }
+
+  header .contratame {
+    padding-inline: 0.4rem;
+  }
+
+  .language-switch {
+    padding-inline: 0.25rem;
+  }
+}
+
+@media (max-height: 500px) and (min-width: 768px) {
+  .seccion {
+    padding-block: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  main {
+    scroll-behavior: auto;
+    scroll-snap-type: none;
+  }
+}

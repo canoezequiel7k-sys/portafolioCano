@@ -22,6 +22,8 @@ export interface UiCopy {
   readonly viewOnGitHub: string;
   readonly contact: string;
   readonly changeTheme: string;
+  readonly languageLink: string;
+  readonly switchLanguage: string;
   readonly instagram: string;
   readonly linkedin: string;
   readonly github: string;
@@ -56,6 +58,8 @@ export const ui: Readonly<Record<Locale, UiCopy>> = {
     viewOnGitHub: "Ver en GitHub",
     contact: "Contrátame",
     changeTheme: "Cambiar tema",
+    languageLink: "English",
+    switchLanguage: "Cambiar al inglés",
     instagram: "Instagram",
     linkedin: "LinkedIn",
     github: "GitHub",
@@ -88,6 +92,8 @@ export const ui: Readonly<Record<Locale, UiCopy>> = {
     viewOnGitHub: "View on GitHub",
     contact: "Contact me",
     changeTheme: "Change theme",
+    languageLink: "Español",
+    switchLanguage: "Switch to Spanish",
     instagram: "Instagram",
     linkedin: "LinkedIn",
     github: "GitHub",

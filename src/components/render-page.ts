@@ -98,6 +98,13 @@ export function renderPage(locale: Locale): string {
       <h1 class="titulo-header">${escapeHtml(copy.pageTitle)}</h1>
       <div class="acciones-header">
         <a href="mailto:canoezequiel63@gmail.com" class="contratame">${escapeHtml(copy.contact)}</a>
+        <a
+          class="language-switch"
+          href="${locale === "es" ? "/en/" : "/"}"
+          hreflang="${locale === "es" ? "en" : "es"}"
+          lang="${locale === "es" ? "en" : "es"}"
+          aria-label="${escapeHtml(copy.switchLanguage)}"
+        >${escapeHtml(copy.languageLink)}</a>
         <button id="dark-toggle" aria-label="${escapeHtml(copy.changeTheme)}">🌙</button>
       </div>
     </header>
@@ -160,7 +167,7 @@ export function renderPage(locale: Locale): string {
           <div class="proyectos-container">${projects}</div>
         </div>
       </section>
-      <footer id="contacto" class="seccion footer-seccion">
+      <footer id="contacto" class="footer-seccion">
         <div class="contenido-centrado">
           <p>${escapeHtml(copy.footer)}</p>
           <div class="redes-footer">

@@ -246,7 +246,7 @@ darkToggle.addEventListener("click", () => {
 // TYPEWRITER EFFECT
 // ============================
 const typewriterText = document.getElementById("typewriter-text");
-const text = "Hola! soy Ezequiel...";
+const text = typewriterText.dataset.text || "Hola! soy Ezequiel...";
 let i = 0;
 
 function typeWriter() {

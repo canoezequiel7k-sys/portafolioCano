@@ -16,6 +16,13 @@ test("serves equivalent Spanish and English draft pages", async ({ page }) => {
     await page.waitForFunction(() =>
       [...document.images].every((image) => image.complete && image.naturalWidth > 0),
     );
+    await expect(page.locator(".marquee-content")).toHaveCSS("animation-duration", "25s");
+    await expect(page.locator(".marquee-group").first()).toHaveCSS("display", "flex");
+    await expect(page.locator(".marquee-group").first()).toHaveCSS("flex-shrink", "0");
+    await expect(page.locator(".marquee-group[aria-hidden=true]")).toHaveAttribute(
+      "aria-hidden",
+      "true",
+    );
     for (const documentPath of [
       "/cv_ezequiel.pdf",
       "/ingles_certificado.pdf",
@@ -26,6 +33,7 @@ test("serves equivalent Spanish and English draft pages", async ({ page }) => {
       expect(response.ok(), `${documentPath} should be served`).toBeTruthy();
     }
     const accessibility = await new AxeBuilder({ page }).analyze();
+    expect(accessibility.violations).toEqual([]);
     await test.info().attach(`axe-${locale.lang}.json`, {
       body: JSON.stringify(accessibility, null, 2),
       contentType: "application/json",
@@ -35,18 +43,249 @@ test("serves equivalent Spanish and English draft pages", async ({ page }) => {
   await expect(page.getByText("English translation draft", { exact: false })).toBeVisible();
 });
 
-test("preserves the menu and persistent theme interaction", async ({ page }) => {
+test("shows the supplied skills and keeps the marquee in one row on mobile", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  for (const skill of [
+    "Kotlin",
+    "Java",
+    "Dart",
+    "Flutter",
+    "Jetpack Compose",
+    "Android SDK",
+    "MVVM",
+    "Clean Architecture",
+    "HTML5",
+    "CSS3",
+    "JavaScript",
+    "TypeScript",
+    "Python",
+    "FastAPI",
+    "Node.js",
+    "APIs REST",
+    "PostgreSQL",
+    "MySQL",
+    "Room",
+    "Git / GitHub",
+    "Docker",
+    "Linux / Ubuntu",
+    "Gradle",
+    "Android Studio",
+    "Visual Studio Code",
+  ]) {
+    await expect(page.locator(".skills-text")).toContainText(skill);
+  }
+
+  const row = await page
+    .locator(".marquee-group")
+    .first()
+    .evaluate((group) => {
+      const icons = [...group.querySelectorAll("img")].map((icon) => icon.getBoundingClientRect());
+      return {
+        tops: icons.map((icon) => icon.top),
+        maxHeight: Math.max(...icons.map((icon) => icon.height)),
+        height: group.getBoundingClientRect().height,
+        scrollWidth: group.scrollWidth,
+        clientWidth: group.clientWidth,
+      };
+    });
+  expect(Math.max(...row.tops) - Math.min(...row.tops)).toBeLessThanOrEqual(1);
+  expect(row.height).toBeLessThanOrEqual(row.maxHeight + 1);
+  expect(row.scrollWidth).toBeLessThanOrEqual(row.clientWidth);
+  await page.goto("/en/");
+  await expect(page.locator(".skills-text")).toContainText("Mobile development:");
+  await expect(page.locator(".skills-text")).toContainText("REST APIs");
+});
+
+test("advances one section per small wheel scroll on desktop and mobile", async ({ page }) => {
+  for (const viewport of [
+    { width: 1280, height: 800 },
+    { width: 390, height: 844 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto("/");
+    await expect(page.locator("main")).toHaveCSS("scroll-snap-type", "y mandatory");
+    await page.mouse.move(Math.floor(viewport.width / 2), Math.floor(viewport.height / 2));
+    await page.mouse.wheel(0, 120);
+    await expect
+      .poll(() => page.locator("main").evaluate((main) => main.scrollTop))
+      .toBeGreaterThan(100);
+    await expect(page.locator("#trabajos")).toBeInViewport();
+  }
+});
+
+test("supports keyboard navigation and a persistent accessible theme toggle", async ({ page }) => {
   await page.goto("/");
   const menuItem = page.locator(".menu-item");
-  await page.locator(".menu-item > a").click();
-  await expect(menuItem).toHaveClass(/active/);
-  await page.locator("h1").click();
+  const menuToggle = page.locator(".menu-toggle");
+  await menuToggle.click();
+  await expect(menuToggle).toHaveAttribute("aria-expanded", "true");
+  await expect(menuToggle).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.locator("#side-navigation a").first()).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(menuToggle).toHaveAttribute("aria-expanded", "false");
+  await expect(menuToggle).toBeFocused();
   await expect(menuItem).not.toHaveClass(/active/);
+  await expect(page.locator("#side-navigation a").first()).toHaveAttribute("tabindex", "-1");
 
-  await page.locator("#dark-toggle").click();
+  await menuToggle.click();
+  await page.locator("h1").click();
+  await expect(menuToggle).toHaveAttribute("aria-expanded", "false");
+
+  const themeToggle = page.locator("#dark-toggle");
+  await expect(themeToggle).toHaveAttribute("aria-label", "Activar modo oscuro");
+  await expect(themeToggle).toHaveText("🌙");
+  await themeToggle.click();
+  await expect(themeToggle).toHaveClass(/animate/);
+  await expect(themeToggle).toHaveCSS("animation-name", "rotateIcon");
   await expect(page.locator("body")).toHaveClass(/dark-mode/);
+  await expect(themeToggle).toHaveAttribute("aria-pressed", "true");
+  await expect(themeToggle).toHaveAttribute("aria-label", "Activar modo claro");
+  await expect(themeToggle).toHaveText("☀️");
   await page.reload();
   await expect(page.locator("body")).toHaveClass(/dark-mode/);
+});
+
+test("preserves section and theme across language changes without replaying the intro", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator("#dark-toggle").click();
+  await page.locator(".menu-toggle").click();
+  await page.locator('#side-navigation a[href="#acerca"]').click();
+  await expect(page).toHaveURL(/#acerca$/);
+
+  await page.locator(".language-switch").click();
+  await expect(page).toHaveURL(/\/en\/#acerca$/);
+  await expect(page.locator("body")).toHaveClass(/dark-mode/);
+  await expect(page.locator("#typewriter-text")).toHaveText("Hi! I'm Ezequiel...");
+  await expect(page.locator("#acerca")).toBeInViewport();
+
+  await page.goto("/");
+  await expect(page).toHaveURL(/\/en\/(?:#inicio)?$/);
+  await page.locator(".language-switch").click();
+  await expect(page).toHaveURL(/\/#inicio$/);
+  await expect(page.locator("html")).toHaveAttribute("lang", "es");
+});
+
+test("respects reduced motion for the typewriter, marquee, and section scroll", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await expect(page.locator("#typewriter-text")).toHaveText("Hola! soy Ezequiel...");
+  await expect(page.locator(".marquee-content")).toHaveCSS("animation-name", "none");
+  await expect(page.locator(".marquee-group[aria-hidden=true]")).toBeHidden();
+  await expect(page.locator("main")).toHaveCSS("scroll-snap-type", "none");
+  const themeToggle = page.locator("#dark-toggle");
+  await themeToggle.click();
+  await expect(themeToggle).toHaveAttribute("aria-pressed", "true");
+  await expect(themeToggle).not.toHaveClass(/animate/);
+  await expect(themeToggle).toHaveCSS("animation-name", "none");
+  await page.mouse.move(640, 400);
+  await page.mouse.wheel(0, 120);
+  await expect
+    .poll(() => page.locator("main").evaluate((main) => main.scrollTop))
+    .toBeGreaterThan(0);
+});
+
+test("scales the canvas to device pixels and adapts on resize", async ({
+  browser,
+  page: basePage,
+}) => {
+  await basePage.goto("/");
+  const context = await browser.newContext({
+    baseURL: new URL(basePage.url()).origin,
+    viewport: { width: 1280, height: 800 },
+    deviceScaleFactor: 2,
+  });
+  const page = await context.newPage();
+  await page.goto("/");
+
+  const canvasSize = () =>
+    page.locator("#background-canvas").evaluate((canvas: HTMLCanvasElement) => ({
+      cssWidth: canvas.getBoundingClientRect().width,
+      cssHeight: canvas.getBoundingClientRect().height,
+      pixelWidth: canvas.width,
+      pixelHeight: canvas.height,
+      ratio: devicePixelRatio,
+    }));
+
+  let dimensions = await canvasSize();
+  expect(dimensions.pixelWidth).toBe(Math.round(dimensions.cssWidth * dimensions.ratio));
+  expect(dimensions.pixelHeight).toBe(Math.round(dimensions.cssHeight * dimensions.ratio));
+  await page.setViewportSize({ width: 1024, height: 768 });
+  await expect
+    .poll(async () => (await canvasSize()).pixelWidth)
+    .toBe(Math.round(1024 * dimensions.ratio));
+  dimensions = await canvasSize();
+  expect(dimensions.pixelHeight).toBe(Math.round(dimensions.cssHeight * dimensions.ratio));
+  await context.close();
+});
+
+test("uses bounded pointer tracking on desktop and idle motion on touch", async ({
+  browser,
+  page: basePage,
+}) => {
+  await basePage.goto("/");
+  const baseURL = new URL(basePage.url()).origin;
+  const desktopContext = await browser.newContext({
+    baseURL,
+    viewport: { width: 1280, height: 800 },
+  });
+  const desktop = await desktopContext.newPage();
+  await desktop.goto("/");
+  const pupil = desktop.locator("#ojo-izq");
+  const desktopStart = await pupil.evaluate((element: SVGCircleElement) => ({
+    x: Number(element.getAttribute("cx")),
+    y: Number(element.getAttribute("cy")),
+  }));
+  await desktop.evaluate(() =>
+    window.dispatchEvent(
+      new PointerEvent("pointermove", { pointerType: "mouse", clientX: 0, clientY: 0 }),
+    ),
+  );
+  await desktop.waitForTimeout(300);
+  const desktopEnd = await pupil.evaluate((element: SVGCircleElement) => ({
+    x: Number(element.getAttribute("cx")),
+    y: Number(element.getAttribute("cy")),
+  }));
+  const desktopMovement = Math.hypot(desktopEnd.x - desktopStart.x, desktopEnd.y - desktopStart.y);
+  expect(desktopMovement).toBeGreaterThan(0);
+  expect(desktopMovement).toBeLessThanOrEqual(6.001);
+  await desktopContext.close();
+
+  const touchContext = await browser.newContext({
+    baseURL,
+    viewport: { width: 390, height: 844 },
+    isMobile: true,
+    hasTouch: true,
+  });
+  const touchPage = await touchContext.newPage();
+  await touchPage.goto("/");
+  await expect
+    .poll(() => touchPage.evaluate(() => matchMedia("(pointer: coarse)").matches))
+    .toBeTruthy();
+  const touchPupil = touchPage.locator("#ojo-izq");
+  await touchPage.waitForTimeout(300);
+  const touchStart = await touchPupil.evaluate((element: SVGCircleElement) => ({
+    x: Number(element.getAttribute("cx")),
+    y: Number(element.getAttribute("cy")),
+  }));
+  await touchPage.evaluate(() =>
+    window.dispatchEvent(
+      new PointerEvent("pointermove", { pointerType: "touch", clientX: 0, clientY: 0 }),
+    ),
+  );
+  await touchPage.waitForTimeout(300);
+  const touchEnd = await touchPupil.evaluate((element: SVGCircleElement) => ({
+    x: Number(element.getAttribute("cx")),
+    y: Number(element.getAttribute("cy")),
+  }));
+  const touchMovement = Math.hypot(touchEnd.x - touchStart.x, touchEnd.y - touchStart.y);
+  expect(touchMovement).toBeLessThan(2);
+  await touchContext.close();
 });
 
 test("switches between locale routes and stays within the requested viewports", async ({
@@ -74,11 +313,13 @@ test("switches between locale routes and stays within the requested viewports", 
     await expect(languageLink).toHaveAttribute("lang", locale.targetLang);
     await expect(languageLink).toHaveAttribute("href", locale.target);
     await languageLink.click();
-    await expect(page).toHaveURL(new RegExp(`${locale.target.replaceAll("/", "\\/")}$`));
+    await expect(page).toHaveURL(new RegExp(`${locale.target.replaceAll("/", "\\/")}#inicio$`));
 
+    await page.evaluate(() => localStorage.removeItem("preferred-locale"));
     await page.goto(locale.path);
     for (const viewport of viewports) {
       await page.setViewportSize(viewport);
+      await expect(languageLink).toBeVisible();
       const overflow = await page.evaluate(() => ({
         viewport: document.documentElement.clientWidth,
         main: document.querySelector("main")?.scrollWidth,

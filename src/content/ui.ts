@@ -21,9 +21,9 @@ export interface UiCopy {
   readonly mobileApp: string;
   readonly viewOnGitHub: string;
   readonly contact: string;
-  readonly changeTheme: string;
+  readonly activateDarkMode: string;
+  readonly activateLightMode: string;
   readonly languageLink: string;
-  readonly switchLanguage: string;
   readonly instagram: string;
   readonly linkedin: string;
   readonly github: string;
@@ -57,9 +57,9 @@ export const ui: Readonly<Record<Locale, UiCopy>> = {
     mobileApp: "Aplicacion Móvil",
     viewOnGitHub: "Ver en GitHub",
     contact: "Contrátame",
-    changeTheme: "Cambiar tema",
+    activateDarkMode: "Activar modo oscuro",
+    activateLightMode: "Activar modo claro",
     languageLink: "English",
-    switchLanguage: "Cambiar al inglés",
     instagram: "Instagram",
     linkedin: "LinkedIn",
     github: "GitHub",
@@ -91,9 +91,9 @@ export const ui: Readonly<Record<Locale, UiCopy>> = {
     mobileApp: "Mobile application",
     viewOnGitHub: "View on GitHub",
     contact: "Contact me",
-    changeTheme: "Change theme",
+    activateDarkMode: "Enable dark mode",
+    activateLightMode: "Enable light mode",
     languageLink: "Español",
-    switchLanguage: "Switch to Spanish",
     instagram: "Instagram",
     linkedin: "LinkedIn",
     github: "GitHub",

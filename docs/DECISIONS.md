@@ -21,20 +21,34 @@
 | Selector ES/EN como enlace con fallback | Funciona sin JavaScript y anuncia idioma de destino con `hreflang` y `lang`.                | Implementado |
 | Mantener EN como borrador               | El enlace no constituye aprobación editorial ni habilita indexación.                        | Sin cambios  |
 
+## Fase 3
+
+| Decisión                                         | Motivo                                                                                        | Estado       |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------------- | ------------ |
+| Menú como botón accesible                        | `aria-expanded`, enlaces inertes al cerrar, Tab/foco, cierre con Escape y click externo.      | Implementado |
+| Reveal con IntersectionObserver y GSAP           | Conserva el stagger de 150 ms y evita cálculos por cada evento de scroll.                     | Implementado |
+| Canvas de 180 partículas con pausa y DPR         | Evita trabajo oculto, mantiene partículas en resize y protege los cálculos no finitos.        | Implementado |
+| Ojos siguen puntero fino; idle en táctil         | Ezequiel eligió idle táctil; seguimiento acotado a seis unidades SVG en dispositivos finos.   | Implementado |
+| Tilt GSAP solo con hover/puntero fino            | Conserva intensidades 8 y 12 sin competir con gestos táctiles.                                | Implementado |
+| Typewriter 120 ms; no reiniciar en cambio idioma | Preferencia elegida por Ezequiel; reduced motion completa el texto sin animarlo.              | Implementado |
+| Marquee CSS duplicado accesible                  | Dos grupos idénticos, copia oculta a lectores de pantalla y ciclo de 25 segundos.             | Implementado |
+| Tema e idioma con mejora View Transitions        | Persiste tema y sección; fallback normal. El idioma se recuerda solo tras elección explícita. | Implementado |
+| Excluir crawlers de la redirección por idioma    | La preferencia guardada no altera el idioma de rastreo ni crea detección automática.          | Implementado |
+
 ## Propiedad de animaciones
 
-Cada propiedad animada debe tener un único propietario salvo coordinación documentada. Propuesta a validar antes de migrar:
+Cada propiedad animada tiene un único propietario salvo coordinación documentada:
 
-| Elemento                     | Propietario actual | Propuesta objetivo                                           | Fase |
-| ---------------------------- | ------------------ | ------------------------------------------------------------ | ---- |
-| Menú                         | CSS + `script.js`  | CSS + feature de navegación; transiciones simples CSS        | 3    |
-| Reveal de secciones/tarjetas | CSS + `script.js`  | IntersectionObserver + GSAP stagger                          | 3    |
-| Ojos                         | `script.js`        | Feature de puntero/GSAP quickTo                              | 3    |
-| Tilt                         | CSS + `script.js`  | Una feature, GSAP quickTo                                    | 3    |
-| Typewriter                   | CSS + `script.js`  | Feature aislada, con reduced motion                          | 3    |
-| Marquee                      | CSS                | CSS                                                          | 3    |
-| Tema                         | CSS + `script.js`  | View Transitions con alternativa                             | 3    |
-| Idioma                       | No existe          | View Transitions progresivas y navegación normal de respaldo | 3    |
-| Partículas                   | rAF en `script.js` | rAF propio                                                   | 3    |
+| Elemento                     | Propietario actual          | Propuesta objetivo                                    | Fase |
+| ---------------------------- | --------------------------- | ----------------------------------------------------- | ---- |
+| Menú                         | CSS + feature de navegación | CSS + feature de navegación; transiciones simples CSS | 3    |
+| Reveal de secciones/tarjetas | IntersectionObserver + GSAP | IntersectionObserver + GSAP stagger                   | 3    |
+| Ojos                         | Feature GSAP                | Seguimiento limitado; idle táctil GSAP                | 3    |
+| Tilt                         | Feature GSAP                | Una feature, GSAP quickTo                             | 3    |
+| Typewriter                   | Feature TypeScript          | Feature aislada, con reduced motion                   | 3    |
+| Marquee                      | CSS                         | CSS                                                   | 3    |
+| Tema                         | Feature + View Transitions  | View Transitions con alternativa CSS                  | 3    |
+| Idioma                       | Enlace HTML + feature       | Navegación nativa y View Transitions progresivas      | 3    |
+| Partículas                   | Feature canvas con rAF      | rAF propio, pausado en segundo plano                  | 3    |
 
-No se inicializan timelines GSAP en esta fase; la matriz es una propuesta de propiedad para el trabajo de interacciones.
+Las rutas Vite ya no cargan `script.js`: las interacciones migradas se inicializan desde `src/features/index.ts` y devuelven limpieza para HMR. El archivo y el HTML legacy de la raíz se conservan juntos para no dejar rota esa entrada independiente.

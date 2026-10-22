@@ -47,43 +47,52 @@ export const profile: ProfileContent = {
   ],
   skillGroups: [
     {
-      label: { es: "Lenguajes:", en: "Languages:" },
-      details: { es: "Python, Java, C#, C++", en: "Python, Java, C#, C++" },
+      label: { es: "Desarrollo móvil:", en: "Mobile development:" },
+      details: {
+        es: "Kotlin, Java, Dart, Flutter, Jetpack Compose, Android SDK, MVVM, Clean Architecture",
+        en: "Kotlin, Java, Dart, Flutter, Jetpack Compose, Android SDK, MVVM, Clean Architecture",
+      },
     },
     {
-      label: { es: "Base de Datos:", en: "Databases:" },
-      details: { es: "PostgreSQL, MySQL", en: "PostgreSQL, MySQL" },
+      label: { es: "Frontend:", en: "Frontend:" },
+      details: {
+        es: "HTML5, CSS3, JavaScript, TypeScript",
+        en: "HTML5, CSS3, JavaScript, TypeScript",
+      },
     },
     {
-      label: { es: "Desarrollo web:", en: "Web development:" },
-      details: { es: "HTML, CSS, JavaScript", en: "HTML, CSS, JavaScript" },
+      label: { es: "Backend:", en: "Backend:" },
+      details: {
+        es: "Python, FastAPI, Node.js, APIs REST",
+        en: "Python, FastAPI, Node.js, REST APIs",
+      },
     },
     {
-      label: { es: "Frameworks / Mobile:", en: "Frameworks / Mobile:" },
-      details: { es: "Flutter, Django, Dart", en: "Flutter, Django, Dart" },
+      label: { es: "Bases de datos:", en: "Databases:" },
+      details: { es: "PostgreSQL, MySQL, Room", en: "PostgreSQL, MySQL, Room" },
     },
     {
-      label: { es: "Manejo de", en: "Experience with" },
-      details: { es: "Docker, Vagrant y Linux", en: "Docker, Vagrant, and Linux" },
+      label: { es: "Herramientas y tecnologías:", en: "Tools and technologies:" },
+      details: {
+        es: "Git / GitHub, Docker, Linux / Ubuntu, Gradle, Android Studio, Visual Studio Code",
+        en: "Git / GitHub, Docker, Linux / Ubuntu, Gradle, Android Studio, Visual Studio Code",
+      },
     },
   ],
   skills: [
     { name: "GitHub", icon: "github.svg" },
+    { name: "Kotlin", icon: "kotlin.svg" },
     { name: "Python", icon: "python.svg" },
     { name: "Java", icon: "java.svg" },
     { name: "HTML", icon: "html.svg" },
     { name: "CSS", icon: "css.svg" },
     { name: "JavaScript", icon: "javascript.svg" },
-    { name: "Django", icon: "django.svg" },
-    { name: "Pygame", icon: "pygame.png" },
-    { name: "C++", icon: "cpp.svg" },
     { name: "Dart", icon: "dart.svg" },
     { name: "Flutter", icon: "flutter.svg" },
     { name: "MySQL", icon: "mysql.svg" },
     { name: "PostgreSQL", icon: "postgresql.svg" },
     { name: "Linux", icon: "linux.svg" },
     { name: "Git", icon: "git.svg" },
-    { name: "Vagrant", icon: "vagrant.png" },
     { name: "Docker", icon: "docker.svg" },
   ],
   about: {

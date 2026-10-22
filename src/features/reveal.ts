@@ -22,7 +22,6 @@ export function initializeReveal(root: Document): () => void {
       ),
     ];
     animatedItems.set(section, items);
-    gsap.set(section, { autoAlpha: 0, y: 50 });
     gsap.set(items, { autoAlpha: 0, y: 18 });
   }
 
@@ -35,13 +34,6 @@ export function initializeReveal(root: Document): () => void {
         const section = entry.target;
         observer.unobserve(section);
         section.classList.add("visible");
-        gsap.to(section, {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.8,
-          ease: "power2.out",
-          overwrite: true,
-        });
         const items = animatedItems.get(section) ?? [];
         gsap.to(items, {
           autoAlpha: 1,
@@ -62,10 +54,9 @@ export function initializeReveal(root: Document): () => void {
 
   return () => {
     observer.disconnect();
-    for (const section of sections) {
-      gsap.killTweensOf(section);
-      gsap.killTweensOf(animatedItems.get(section) ?? []);
-      gsap.set([section, ...(animatedItems.get(section) ?? [])], { clearProps: "all" });
+    for (const items of animatedItems.values()) {
+      gsap.killTweensOf(items);
+      gsap.set(items, { clearProps: "all" });
     }
   };
 }

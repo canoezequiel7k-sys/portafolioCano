@@ -104,13 +104,66 @@ test("advances one section per small wheel scroll on desktop and mobile", async 
   ]) {
     await page.setViewportSize(viewport);
     await page.goto("/");
-    await expect(page.locator("main")).toHaveCSS("scroll-snap-type", "y mandatory");
+    await expect(page.locator("main")).toHaveCSS("scroll-snap-type", "y");
     await page.mouse.move(Math.floor(viewport.width / 2), Math.floor(viewport.height / 2));
     await page.mouse.wheel(0, 120);
     await expect
       .poll(() => page.locator("main").evaluate((main) => main.scrollTop))
-      .toBeGreaterThan(100);
+      .toBeGreaterThan(0);
     await expect(page.locator("#trabajos")).toBeInViewport();
+    await expect
+      .poll(async () => {
+        const [sectionTop, headerBottom] = await Promise.all([
+          page.locator("#trabajos").evaluate((section) => section.getBoundingClientRect().top),
+          page.locator("header").evaluate((header) => header.getBoundingClientRect().bottom),
+        ]);
+        return Math.abs(sectionTop - headerBottom);
+      })
+      .toBeLessThan(2);
+    const [sectionTop, headerBottom, nextSectionTop] = await Promise.all([
+      page.locator("#trabajos").evaluate((section) => section.getBoundingClientRect().top),
+      page.locator("header").evaluate((header) => header.getBoundingClientRect().bottom),
+      page.locator("#acerca").evaluate((section) => section.getBoundingClientRect().top),
+    ]);
+    expect(Math.abs(sectionTop - headerBottom)).toBeLessThan(2);
+    expect(nextSectionTop).toBeGreaterThanOrEqual(viewport.height - 1);
+    if (viewport.width < 768) {
+      await expect(page.locator("#trabajos")).toHaveCSS("scroll-snap-align", "none");
+    }
+  }
+});
+
+test("scrolls down through long sections to the footer, then back up without URL changes", async ({
+  page,
+}) => {
+  for (const viewport of [
+    { width: 1280, height: 800 },
+    { width: 390, height: 844 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto("/");
+    const sectionColors = await page
+      .locator("main > .seccion")
+      .evaluateAll((sections) =>
+        sections.map((section) => getComputedStyle(section).backgroundColor),
+      );
+    expect(sectionColors[0]).not.toBe("rgba(0, 0, 0, 0)");
+    expect(sectionColors[0]).not.toBe(sectionColors[1]);
+    expect(sectionColors.every((color) => color.startsWith("rgba("))).toBe(true);
+    await page.mouse.move(Math.floor(viewport.width / 2), Math.floor(viewport.height / 2));
+    for (let index = 0; index < 12; index += 1) {
+      await page.mouse.wheel(0, 120);
+      await page.waitForTimeout(450);
+    }
+    await expect(page.locator("#contacto")).toBeInViewport();
+    await expect(page).toHaveURL("/");
+
+    for (let index = 0; index < 12; index += 1) {
+      await page.mouse.wheel(0, -120);
+      await page.waitForTimeout(450);
+    }
+    await expect(page.locator("#inicio")).toBeInViewport();
+    await expect(page).toHaveURL("/");
   }
 });
 

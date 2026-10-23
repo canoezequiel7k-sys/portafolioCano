@@ -1,6 +1,7 @@
 import tsParser from "@typescript-eslint/parser";
 import tsPlugin from "@typescript-eslint/eslint-plugin";
 
+// ESLint aplica reglas de TypeScript y omite artefactos generados por build/pruebas.
 export default [
   {
     ignores: [
@@ -12,6 +13,7 @@ export default [
     ],
   },
   {
+    // Usa el parser y las reglas recomendadas de typescript-eslint solo en .ts.
     files: ["**/*.ts"],
     languageOptions: {
       parser: tsParser,

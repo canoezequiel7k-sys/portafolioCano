@@ -1,5 +1,6 @@
 import { gsap } from "gsap";
 
+/** Revela el contenido de cada sección al entrar en pantalla y cancela sus animaciones al desmontar. */
 export function initializeReveal(root: Document): () => void {
   const main = root.querySelector<HTMLElement>("main");
   const sections = [...root.querySelectorAll<HTMLElement>("main > .seccion")];

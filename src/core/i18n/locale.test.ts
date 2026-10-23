@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { localizedText, resolveLocale } from "./locale.ts";
 
+// Comprueba la detección del idioma a partir de la ruta y el texto elegido.
 describe("resolveLocale", () => {
   it("uses Spanish by default", () => {
     expect(resolveLocale("/")).toBe("es");

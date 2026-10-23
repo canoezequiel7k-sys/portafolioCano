@@ -8,6 +8,7 @@ import { initializeTheme } from "./theme.ts";
 import { initializeTilt } from "./tilt.ts";
 import { initializeTypewriter } from "./typewriter.ts";
 
+/** Inicializa todas las interacciones y devuelve una única función de limpieza. */
 export function initializeInteractions(root: Document): () => void {
   const cleanups = [
     initializeNavigation(root),

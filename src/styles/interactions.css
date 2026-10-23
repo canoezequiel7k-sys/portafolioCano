@@ -1,3 +1,4 @@
+/* Enlace invisible hasta que recibe foco, para saltar al contenido principal. */
 .skip-link {
   position: fixed;
   top: 0.5rem;
@@ -15,6 +16,7 @@
   transform: translateY(0);
 }
 
+/* Evita que el encabezado fijo tape el contenido al enfocar o saltar a él. */
 main > .seccion .proyecto,
 main > .seccion .fade-text,
 main > .seccion .fade-in-seq,
@@ -96,6 +98,7 @@ main .typewriter {
   overflow: visible;
 }
 
+/* El menú lateral se abre visualmente sin perder su estado accesible. */
 .menu-toggle {
   display: block;
   padding: 0.625rem 0.9375rem;
@@ -133,6 +136,7 @@ a:focus-visible {
   outline-offset: 3px;
 }
 
+/* La marquesina mantiene sus iconos alineados y se pausa al pasar el puntero. */
 .marquee-content {
   display: flex;
   width: max-content;
@@ -157,6 +161,7 @@ a:focus-visible {
   animation-play-state: paused;
 }
 
+/* Conserva perspectiva para la inclinación interactiva de tarjetas. */
 .about-card,
 .certificaciones-container {
   transform-style: preserve-3d;
@@ -181,6 +186,7 @@ body.dark-mode .marquee-content img {
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
 }
 
+/* Desplazamiento continuo de la marquesina tecnológica. */
 @keyframes skill-marquee {
   to {
     transform: translateX(-50%);

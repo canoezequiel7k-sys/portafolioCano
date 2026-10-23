@@ -1,5 +1,6 @@
 import type { ProfileContent } from "../types/content.ts";
 
+// Fuente única de datos profesionales y proyectos en español e inglés.
 export const profile: ProfileContent = {
   introduction: {
     es: "Hola! soy Ezequiel...",
@@ -13,6 +14,7 @@ export const profile: ProfileContent = {
     es: "Diseño y desarrollo aplicaciones y sitios web, priorizando rendimiento como la experiencia del usuario.",
     en: "I design and develop applications and websites, prioritizing performance and user experience.",
   },
+  // Trayectoria laboral presentada en la sección de experiencia.
   experience: [
     {
       role: {
@@ -45,6 +47,7 @@ export const profile: ProfileContent = {
       },
     },
   ],
+  // Resumen textual de tecnologías; complementa los iconos animados.
   skillGroups: [
     {
       label: { es: "Desarrollo móvil:", en: "Mobile development:" },
@@ -79,6 +82,7 @@ export const profile: ProfileContent = {
       },
     },
   ],
+  // Iconos usados en la marquesina duplicada para el bucle visual.
   skills: [
     { name: "GitHub", icon: "github.svg" },
     { name: "Kotlin", icon: "kotlin.svg" },
@@ -113,6 +117,7 @@ export const profile: ProfileContent = {
     es: "🌍 Inglés B1 | Portugués A2",
     en: "🌍 English B1 | Portuguese A2",
   },
+  // Certificados descargables y sus nombres por idioma.
   certifications: [
     {
       title: {
@@ -136,6 +141,7 @@ export const profile: ProfileContent = {
       document: "/coderhause.pdf",
     },
   ],
+  // Proyectos del portafolio; las imágenes incluyen texto alternativo localizado.
   projects: [
     {
       title: {

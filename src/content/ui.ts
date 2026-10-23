@@ -1,5 +1,6 @@
 import type { Locale, Localized } from "../types/content.ts";
 
+/** Textos de navegación, controles, accesibilidad y metadatos en cada idioma. */
 export interface UiCopy {
   readonly pageTitle: string;
   readonly ownerName: string;
@@ -34,6 +35,7 @@ export interface UiCopy {
   readonly footer: string;
 }
 
+// Copia de interfaz aprobada; al añadir una clave debe completarse en ambos idiomas.
 export const ui: Readonly<Record<Locale, UiCopy>> = {
   es: {
     pageTitle: "Ezequiel Cano | Desarrollador Web y Full Stack Junior",
@@ -103,6 +105,7 @@ export const ui: Readonly<Record<Locale, UiCopy>> = {
   },
 };
 
+/** Nombres de idioma localizados para etiquetas y mensajes de interfaz. */
 export const localeName: Readonly<Record<Locale, Localized>> = {
   es: { es: "Español", en: "Spanish" },
   en: { es: "English", en: "English" },

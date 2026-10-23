@@ -1,7 +1,9 @@
+/* Altura del encabezado usada para calcular el espacio de las secciones. */
 :root {
   --header-height: 3.75rem;
 }
 
+/* Deja visible el canvas del fondo mientras el contenido ocupa el primer plano. */
 body {
   color: var(--color-text);
   background: transparent;
@@ -11,10 +13,17 @@ html {
   background: var(--color-page);
 }
 
+/* Coloca las partículas detrás de la interfaz, sin interceptar su interacción. */
 #background-canvas {
   z-index: 0;
 }
 
+/* El personaje hereda el color de contraste definido para el tema. */
+.personaje {
+  color: var(--color-character);
+}
+
+/* Encabezado fijo: navegación, título y controles de usuario. */
 header {
   height: var(--header-height);
   padding-inline: clamp(0.75rem, 2vw, 1.875rem);
@@ -28,6 +37,7 @@ header .titulo-header {
   white-space: nowrap;
 }
 
+/* Agrupa el botón de contacto, el idioma y el cambio de tema. */
 .acciones-header {
   display: flex;
   align-items: center;
@@ -41,6 +51,7 @@ header .contratame {
   white-space: nowrap;
 }
 
+/* Enlace para cambiar entre las páginas española e inglesa. */
 .language-switch {
   display: inline-flex;
   min-height: 2.5rem;
@@ -60,6 +71,7 @@ header .contratame {
   text-decoration: underline;
 }
 
+/* El elemento main controla el desplazamiento vertical por secciones. */
 main {
   height: 100vh;
   height: 100dvh;
@@ -71,6 +83,7 @@ main {
   scroll-snap-type: y proximity;
 }
 
+/* Cada sección llena el área bajo el encabezado y participa del ajuste al scroll. */
 .seccion {
   width: 100%;
   height: auto;
@@ -81,6 +94,7 @@ main {
   background-color: var(--section-background);
 }
 
+/* Las secciones de contenido largo no se fuerzan a encajar en una sola pantalla. */
 .seccion--larga {
   scroll-snap-align: none;
 }
@@ -102,6 +116,7 @@ main > .proyectos {
   background-color: var(--section-background);
 }
 
+/* Centra el contenido y limita el ancho de lectura en pantallas grandes. */
 .contenido-centrado {
   width: min(100%, 72rem);
   max-width: 72rem;
@@ -113,6 +128,7 @@ main > .proyectos {
   width: min(100%, 56rem);
 }
 
+/* Permite que la introducción larga se ajuste sin desbordar la ventana. */
 #inicio .typewriter {
   max-width: 100%;
   font-size: clamp(1.15rem, 4vw, 2rem);
@@ -120,6 +136,7 @@ main > .proyectos {
   overflow-wrap: anywhere;
 }
 
+/* Cuadrícula de tarjetas reutilizada para experiencia y proyectos. */
 .cajas-dos {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(0.75rem, 2vw, 1.25rem);
@@ -135,6 +152,7 @@ main > .proyectos {
   transform: none;
 }
 
+/* Mantiene las imágenes de proyecto proporcionales y adaptables al ancho. */
 .proyecto img {
   display: block;
   width: 100%;
@@ -143,12 +161,14 @@ main > .proyectos {
   object-fit: cover;
 }
 
+/* Ventana de recorte para la fila animada de iconos tecnológicos. */
 .skills-marquee {
   width: 100%;
   margin-inline: 0;
   overflow: hidden;
 }
 
+/* Distribución de la tarjeta de perfil en dos columnas para escritorio. */
 .about-card {
   display: grid;
   width: min(100%, 56rem);
@@ -161,6 +181,7 @@ main > .proyectos {
   text-align: left;
 }
 
+/* Centra la fotografía de perfil en su columna. */
 .about-left {
   display: grid;
   justify-items: center;
@@ -173,37 +194,44 @@ main > .proyectos {
   aspect-ratio: 1;
 }
 
+/* Permite que el texto de perfil se encoja sin crear overflow horizontal. */
 .about-right {
   min-width: 0;
 }
 
+/* Enlaces y datos de perfil pueden saltar de línea en pantallas angostas. */
 .about-info li {
   flex-wrap: wrap;
   overflow-wrap: anywhere;
 }
 
+/* Centra las listas de CV y certificados dentro de su contenido. */
 .cv-container,
 .card-wrapper {
   width: min(100%, 56rem);
   margin-inline: auto;
 }
 
+/* Separa los certificados de la información principal del perfil. */
 .certificaciones-container {
   margin-top: clamp(1rem, 3vw, 2rem);
 }
 
+/* Evita que enlaces largos de certificados ensanchen la tarjeta. */
 .cert-list li {
   min-width: 0;
   flex-wrap: wrap;
   overflow-wrap: anywhere;
 }
 
+/* Cuadrícula de tarjetas que se convierte en una columna en móvil. */
 .proyectos-container {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: stretch;
 }
 
+/* Fondo del bloque final con el mismo alto mínimo que el resto de secciones. */
 .footer-seccion {
   display: grid;
   min-height: calc(100dvh - var(--header-height));
@@ -212,6 +240,7 @@ main > .proyectos {
   background-color: var(--section-background);
 }
 
+/* Colores translúcidos de cada sección en tema oscuro. */
 body.dark-mode .inicio,
 body.dark-mode .acerca {
   --section-background: rgba(18, 18, 18, 0.72);
@@ -238,6 +267,7 @@ body.dark-mode .language-switch:hover {
   color: #90caf9;
 }
 
+/* Reorganiza encabezado, tarjetas y cuadrículas en pantallas móviles. */
 @media (max-width: 767px) {
   :root {
     --header-height: 5.5rem;
@@ -345,6 +375,7 @@ body.dark-mode .language-switch:hover {
   }
 }
 
+/* Reduce espaciados para conservar los controles en dispositivos muy estrechos. */
 @media (max-width: 360px) {
   header {
     padding-inline: 0.5rem;
@@ -363,12 +394,14 @@ body.dark-mode .language-switch:hover {
   }
 }
 
+/* Reduce el relleno cuando la ventana de escritorio tiene poca altura. */
 @media (max-height: 500px) and (min-width: 768px) {
   .seccion {
     padding-block: 1rem;
   }
 }
 
+/* Respeta la preferencia del sistema por menos movimiento y desactiva el snap. */
 @media (prefers-reduced-motion: reduce) {
   main {
     scroll-behavior: auto;

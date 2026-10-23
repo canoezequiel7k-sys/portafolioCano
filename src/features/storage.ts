@@ -1,3 +1,4 @@
+/** Lee una preferencia persistente; informa si el navegador bloquea localStorage. */
 export function readPreference(key: string): string | null {
   try {
     return window.localStorage.getItem(key);
@@ -7,6 +8,7 @@ export function readPreference(key: string): string | null {
   }
 }
 
+/** Guarda una preferencia persistente, como tema o idioma. */
 export function writePreference(key: string, value: string): void {
   try {
     window.localStorage.setItem(key, value);
@@ -15,6 +17,7 @@ export function writePreference(key: string, value: string): void {
   }
 }
 
+/** Consume una marca temporal de sesión y la elimina para que no se reutilice. */
 export function readSessionFlag(key: string): boolean {
   try {
     const value = window.sessionStorage.getItem(key) === "true";
@@ -26,6 +29,7 @@ export function readSessionFlag(key: string): boolean {
   }
 }
 
+/** Guarda una marca temporal de navegación en sessionStorage. */
 export function writeSessionFlag(key: string): void {
   try {
     window.sessionStorage.setItem(key, "true");

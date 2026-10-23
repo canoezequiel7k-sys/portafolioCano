@@ -8,6 +8,7 @@ type ViewTransitionDocument = Document & {
   };
 };
 
+/** Conecta el botón de tema, guarda la preferencia y anima el cambio cuando está permitido. */
 export function initializeTheme(root: Document): () => void {
   const button = root.querySelector<HTMLButtonElement>("#dark-toggle");
   const body = root.body;
@@ -24,6 +25,7 @@ export function initializeTheme(root: Document): () => void {
     NonNullable<ViewTransitionDocument["startViewTransition"]>
   > | null = null;
   let isLeaving = false;
+  // Mantiene sincronizados el icono y el nombre accesible con el tema aplicado.
   const updateButton = (): void => {
     const isDark = body.classList.contains("dark-mode");
     button.textContent = isDark ? "☀️" : "🌙";
@@ -33,11 +35,13 @@ export function initializeTheme(root: Document): () => void {
       isDark ? (button.dataset.labelDark ?? "") : (button.dataset.labelLight ?? ""),
     );
   };
+  // Cambia la clase que activa los tokens CSS y persiste la preferencia.
   const applyTheme = (): void => {
     const isDark = body.classList.toggle("dark-mode");
     writePreference("theme", isDark ? "dark" : "light");
     updateButton();
   };
+  // Rota el icono del botón sin animar si el usuario prefiere movimiento reducido.
   const animateButton = (): void => {
     if (reducedMotion?.matches || !view) {
       return;
@@ -54,6 +58,7 @@ export function initializeTheme(root: Document): () => void {
       iconAnimationTimer = null;
     }, 600);
   };
+  // Usa View Transition si está disponible y cae al cambio normal si falla.
   const handleClick = (): void => {
     animateButton();
 
@@ -90,6 +95,7 @@ export function initializeTheme(root: Document): () => void {
       applyTheme();
     }
   };
+  // Evita dejar una transición pendiente al navegar a otro documento.
   const handlePageHide = (): void => {
     isLeaving = true;
     activeTransition = null;

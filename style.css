@@ -1,3 +1,4 @@
+/* Estilos base compartidos; Vite los carga antes de las hojas específicas de src/styles/. */
 /* RESET */
 * {
   margin: 0;

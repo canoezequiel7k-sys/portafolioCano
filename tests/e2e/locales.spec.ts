@@ -263,7 +263,7 @@ test("scrolls down through long sections to the footer, then back up without URL
     expect(sectionColors.every((color) => color.startsWith("rgba("))).toBe(true);
     expect(
       sectionColors.every(
-        (color) => Number.parseFloat(color.slice(color.lastIndexOf(",") + 1)) <= 0.6,
+        (color) => Number.parseFloat(color.slice(color.lastIndexOf(",") + 1)) <= 0.4,
       ),
     ).toBe(true);
     await page.mouse.move(Math.floor(viewport.width / 2), Math.floor(viewport.height / 2));
@@ -326,6 +326,32 @@ test("supports keyboard navigation and a persistent accessible theme toggle", as
   await expect(themeToggle).toHaveText("☀️");
   await page.reload();
   await expect(page.locator("body")).toHaveClass(/dark-mode/);
+});
+
+test("keeps the animated menu within mobile, tablet, and desktop viewports", async ({ page }) => {
+  const menuToggle = page.locator(".menu-toggle");
+  const panel = page.locator("#side-navigation");
+
+  await page.goto("/");
+  for (const width of [320, 390, 768, 1366]) {
+    await page.setViewportSize({ width, height: 800 });
+    await menuToggle.click();
+    await expect(menuToggle).toHaveAttribute("aria-expanded", "true");
+    await expect(panel).toHaveCSS("transition-property", "transform, opacity");
+
+    const bounds = await panel.boundingBox();
+    if (!bounds) {
+      throw new Error(`El panel del menú no tiene límites visibles a ${width}px.`);
+    }
+    expect(bounds.x).toBeGreaterThanOrEqual(0);
+    expect(bounds.x + bounds.width).toBeLessThanOrEqual(width);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+      width,
+    );
+
+    await menuToggle.click();
+    await expect(menuToggle).toHaveAttribute("aria-expanded", "false");
+  }
 });
 
 // Comprueba el color calculado de lentes y pupilas en ambos temas.

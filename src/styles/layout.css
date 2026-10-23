@@ -101,12 +101,12 @@ main {
 
 .inicio,
 .acerca {
-  --section-background: rgba(245, 245, 245, 0.58);
+  --section-background: rgba(245, 245, 245, 0.32);
 }
 
 .trabajos,
 .proyectos {
-  --section-background: rgba(233, 236, 239, 0.58);
+  --section-background: rgba(233, 236, 239, 0.38);
 }
 
 main > .inicio,
@@ -243,20 +243,20 @@ main > .proyectos {
 /* Colores translúcidos de cada sección en tema oscuro. */
 body.dark-mode .inicio,
 body.dark-mode .acerca {
-  --section-background: rgba(18, 18, 18, 0.72);
+  --section-background: rgba(18, 18, 18, 0.68);
 }
 
 body.dark-mode .trabajos,
 body.dark-mode .proyectos {
-  --section-background: rgba(28, 35, 38, 0.72);
+  --section-background: rgba(28, 35, 38, 0.68);
 }
 
 .footer-seccion {
-  --section-background: rgba(214, 214, 214, 0.62);
+  --section-background: rgba(214, 214, 214, 0.5);
 }
 
 body.dark-mode .footer-seccion {
-  --section-background: rgba(18, 18, 18, 0.78);
+  --section-background: rgba(18, 18, 18, 0.74);
 }
 
 body.dark-mode .language-switch {

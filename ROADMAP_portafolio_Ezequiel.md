@@ -26,9 +26,9 @@ Documento operativo. La especificación completa (reglas, criterios de aceptaci�
 | Stack               | Vite + TypeScript + GSAP; sin React ni Astro.                                                                                                                               |
 | Idiomas             | Español (por defecto, en `/`) e inglés (en `/en/`).                                                                                                                         |
 | Cambio de idioma    | Páginas prerenderizadas por idioma; selector como enlace real junto al de tema; View Transitions como mejora progresiva. Delegado por Ezequiel en la recomendación técnica. |
-| Hosting objetivo    | Netlify (el hosting actual está sin confirmar).                                                                                                                             |
-| Repositorio         | Existe en GitHub; la carpeta local **no** es un clon.                                                                                                                       |
-| Producción          | `main` no se toca hasta el release final. Rama de integración: `modernization`.                                                                                             |
+| Hosting objetivo    | Netlify; producción observada en `https://portafolio-cano.netlify.app/`. La rama de despliegue configurada no se pudo confirmar directamente.                              |
+| Repositorio         | `https://github.com/canoezequiel7k-sys/portafolioCano`; esta carpeta sí es un clon Git.                                                                                     |
+| Producción          | Plan: `main` solo al release aprobado e integración en `modernization`. Hecho: PR #7 integró `phase-3-interactions` directamente en `main`; `modernization` sigue en el tag legado. |
 | Tag de recuperación | `legacy-v1` (reemplaza a `legacy-2023`).                                                                                                                                    |
 | Agentes             | Tres.                                                                                                                                                                       |
 
@@ -36,8 +36,8 @@ Documento operativo. La especificación completa (reglas, criterios de aceptaci�
 
 | #   | Dato                                                                            | Necesario antes de                                                     | Estado |
 | --- | ------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | ------ |
-| 1   | URL del repositorio en GitHub                                                   | Gate G0                                                                | [ ]    |
-| 2   | Proveedor, URL y dominio del sitio publicado; si se despliega solo desde `main` | Gate G0 (idealmente antes de empezar la Fase 0, para medir Lighthouse) | [ ]    |
+| 1   | URL del repositorio en GitHub                                                   | Gate G0                                                                | [x] `https://github.com/canoezequiel7k-sys/portafolioCano` |
+| 2   | Proveedor, URL y dominio del sitio publicado; si se despliega solo desde `main` | Gate G0 (idealmente antes de empezar la Fase 0, para medir Lighthouse) | [ ] Netlify y URL verificados; rama de despliegue sin confirmar |
 | 3   | Fuente de verdad si local y remoto difieren                                     | Gate G0                                                                | [ ]    |
 | 4   | Nombre exacto del título profesional y fecha                                    | Fase 2                                                                 | [ ]    |
 | 5   | Proyectos mobile a destacar y su material (capturas, video, repo, APK)          | Fase 2                                                                 | [ ]    |
@@ -221,7 +221,7 @@ Documento operativo. La especificación completa (reglas, criterios de aceptaci�
 - [x] **(S)** Favicon y metadatos
 - [x] **(M)** Imágenes WebP con dimensiones, alt descriptivo y carga diferida; originales conservados
 - [x] **(M)** PDFs optimizados, conservando nombres y enlaces
-- [ ] **(M)** Comparar Lighthouse y perfil del canvas con Fase 0 (línea base recuperada; falta URL pública para Lighthouse de producción)
+- [x] **(M)** Comparación Lighthouse/canvas reproducible contra `legacy-v1`; Lighthouse de producción medido. Ver `docs/audit/performance-baseline.md`. Objetivos pendientes de acuerdo y canvas en segundo plano **NO VERIFICADO**.
 
 ### A2 — Contenido + documentación
 
@@ -233,6 +233,8 @@ Documento operativo. La especificación completa (reglas, criterios de aceptaci�
 - [x] Sin errores críticos de accesibilidad conocidos (objetivo WCAG 2.2 AA; axe en ambos idiomas y temas)
 - [ ] Métricas comparadas con la línea base y objetivos acordados con Ezequiel (no se fijan antes de medir)
 - [ ] **E** aprueba el merge a `modernization`
+
+La comparación ya está medida con la etiqueta `legacy-v1` como referencia reproducible, y la URL pública actual fue verificada. El 2026-10-23 Ezequiel indicó que no quiere fijar umbrales por ahora; G4 queda abierto hasta definir criterios basados en estos resultados.
 
 ---
 
@@ -247,6 +249,7 @@ Documento operativo. La especificación completa (reglas, criterios de aceptaci�
 - [x] **(S)** Redirección 301 verificada en Netlify: `/cv_ezequiel.pdf` → `/cv-es.pdf`; certificados mantienen sus rutas.
 - [x] **(M)** Deploy preview del commit `d76da04` verificado: `/`, `/en/`, CVs, certificados, robots, sitemap, metadatos y bundle coincidente con el build local. URL: `deploy-preview-7--portafolio-cano.netlify.app`.
 - [x] **(S)** Chromium E2E ES→EN→ES y persistencia tema/sección en preview: 2/2; sin errores de transición.
+- [x] **(M)** Producción observada en `https://portafolio-cano.netlify.app/`; el HTML referencia los mismos bundles JS/CSS que el build local. Lighthouse móvil/escritorio medido; CV anterior redirige y los PDFs/certificados responden.
 
 **Axe en preview:** `@axe-core/playwright` analiza todos los frames. El fallo estaba exclusivamente en el iframe externo `iframe[title="Netlify Drawer"][src^="https://app.netlify.com/cdp/"]`, inyectado por Netlify y ausente de la aplicación. La prueba excluye solo ese selector exacto; las reglas de axe y el resto de frames siguen activos. E2E completo en Chromium sobre `deploy-preview-7`: **12/12**. Prueba adicional sembró una violación ARIA en `<main>` y axe la detectó con la exclusión activa.
 
@@ -257,15 +260,21 @@ Documento operativo. La especificación completa (reglas, criterios de aceptaci�
 
 ### Gate G5 — Release
 
-**Cierre técnico de Fase 5:** aprobado por Ezequiel el 2026-10-23. El commit `d76da04` está desplegado en la preview; E2E completo en esa preview pasa 12/12 tras aislar únicamente el iframe externo. El trabajo técnico de esta fase está listo para versionar.
+**Cierre técnico de Fase 5:** aprobado por Ezequiel el 2026-10-23. `da0ec13` es el HEAD de `phase-3-interactions`; la preview de `d76da04` pasó E2E 12/12 con la exclusión exacta del iframe Netlify Drawer. `da0ec13` añade solo la prueba axe y este roadmap respecto de `d76da04`.
 
-**Gate de release:** sigue abierto. Los criterios globales no se marcan completos mientras la comparación Lighthouse de G4 siga pendiente; además, Ezequiel aún no autorizó explícitamente el release. No se ha hecho merge a `main` ni se ha creado un tag.
+**Estado verificado 2026-10-23:** GitHub muestra `main` en `ea39660` (PR #7, de `phase-3-interactions` a `main`, merge de `d76da04`), `phase-3-interactions` en `da0ec13` y `modernization` en `b5c55fc` (el mismo commit al que apunta `legacy-v1`). La producción está disponible y el HTML referencia los mismos nombres de bundles que el build actual; no se hizo merge ni despliegue durante esta revisión.
 
-- [ ] Todos los criterios globales del plan (sección 18) cumplidos; pendiente el cierre de métricas comparativas de G4
+GitHub informa cero workflows de Actions, cero rulesets y la rama `main` como no protegida. En PR #7 los checks visibles de Netlify fueron “Redirect rules” y “Header rules” (success), “Pages changed” (neutral) y Deploy Preview (success); no hay checks de código requeridos configurados. El PR #7 integró directamente la rama de fase a `main`, no siguió el paso de integración previsto por `modernization`.
+
+La etiqueta anotada remota `legacy-v1` existe y resuelve a `b5c55fc`; se verificaron los anchors del HTML histórico y en producción el CV antiguo redirige con 301, los dos CVs y los certificados responden 200. Ezequiel confirmó como destino intencional `https://github.com/canoezequiel7k-sys/BelgranoJH`; GitHub sigue devolviendo 404 sin autenticación, por lo que su visibilidad pública no está verificada. Se conservó el enlace y no se inventó un destino alternativo.
+
+**Gate de release:** sigue abierto. G4 espera criterios Lighthouse; `main` no está protegido y `modernization` debe reconciliarse con el flujo aprobado. Ezequiel tampoco autorizó explícitamente el release.
+
+- [ ] Todos los criterios globales del plan (sección 18) cumplidos; G4 y la protección/integración de ramas siguen pendientes
 - [ ] **E** autoriza explícitamente el release
-- [ ] Merge de `modernization` a `main` y verificación del sitio en producción
+- [ ] Merge de `modernization` a `main` según el flujo aprobado (la producción actual proviene del PR #7 directo desde la rama de fase)
 - [ ] Tag de la versión nueva (por ejemplo `v2.0.0`)
-- [ ] `legacy-v1` sigue disponible como punto de recuperación
+- [x] `legacy-v1` sigue disponible como punto de recuperación (tag remoto en `b5c55fc`)
 
 ---
 

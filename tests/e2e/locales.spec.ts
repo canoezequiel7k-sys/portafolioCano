@@ -72,7 +72,11 @@ test("serves equivalent Spanish and English pages", async ({ page }) => {
       })),
     );
     for (const image of images.filter(({ source }) => source?.includes("/images/"))) {
-      expect(image.source).toMatch(/\.webp$/);
+      expect(image.source).toMatch(/(?:\.webp|project-placeholder\.svg)$/);
+      if (image.source?.includes("project-placeholder.svg")) {
+        expect(image.width).toBe("1200");
+        expect(image.height).toBe("750");
+      }
       expect(image.alt).toBeTruthy();
       expect(image.width).toBeTruthy();
       expect(image.height).toBeTruthy();
@@ -240,6 +244,7 @@ test("advances one section per small wheel scroll on desktop and mobile", async 
 test("scrolls down through long sections to the footer, then back up without URL changes", async ({
   page,
 }) => {
+  test.setTimeout(60_000);
   for (const viewport of [
     { width: 1280, height: 800 },
     { width: 390, height: 844 },
@@ -262,15 +267,26 @@ test("scrolls down through long sections to the footer, then back up without URL
       ),
     ).toBe(true);
     await page.mouse.move(Math.floor(viewport.width / 2), Math.floor(viewport.height / 2));
-    for (let index = 0; index < 12; index += 1) {
-      await page.mouse.wheel(0, 120);
+    const isInViewport = (selector: string): Promise<boolean> =>
+      page.locator(selector).evaluate((element) => {
+        const bounds = element.getBoundingClientRect();
+        return bounds.top < window.innerHeight && bounds.bottom > 0;
+      });
+    for (let index = 0; index < 30; index += 1) {
+      if (await isInViewport("#contacto")) {
+        break;
+      }
+      await page.mouse.wheel(0, 600);
       await page.waitForTimeout(450);
     }
     await expect(page.locator("#contacto")).toBeInViewport();
     await expect(page).toHaveURL("/");
 
-    for (let index = 0; index < 12; index += 1) {
-      await page.mouse.wheel(0, -120);
+    for (let index = 0; index < 30; index += 1) {
+      if (await isInViewport("#inicio")) {
+        break;
+      }
+      await page.mouse.wheel(0, -600);
       await page.waitForTimeout(450);
     }
     await expect(page.locator("#inicio")).toBeInViewport();

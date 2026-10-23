@@ -29,7 +29,8 @@ export function renderPage(locale: Locale): string {
     .map(
       (item) => `
         <div class="proyecto">
-          <p><b>${text(item.role, locale)} – ${escapeHtml(item.organization)}, ${text(item.location, locale)}:</b></p><br>
+          <p><b>${text(item.role, locale)} – ${escapeHtml(item.organization)}${item.location ? `, ${text(item.location, locale)}` : ""}</b></p>
+          <p><small>${text(item.period, locale)}</small></p><br>
           <p>${text(item.description, locale)}</p>
         </div>`,
     )

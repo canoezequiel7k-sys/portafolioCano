@@ -101,6 +101,8 @@ main .typewriter {
 /* El menú lateral se abre visualmente sin perder su estado accesible. */
 .menu-toggle {
   display: block;
+  position: relative;
+  z-index: 1000;
   padding: 0.625rem 0.9375rem;
   border: 0;
   background: transparent;
@@ -118,13 +120,16 @@ main .typewriter {
   left: 0;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.35s ease;
+  transform: translateX(1rem);
+  transition:
+    transform 0.28s ease,
+    opacity 0.28s ease;
 }
 
 .menu-item.active .submenu-side {
   opacity: 1;
   pointer-events: auto;
-  transition: opacity 0.35s ease;
+  transform: translateX(0);
 }
 
 .submenu-side a:focus-visible,

@@ -23,3 +23,15 @@
 5. Confirmar si se permiten mediciones Lighthouse de solo lectura en el sitio público.
 
 La secuencia segura del plan —comparar primero, decidir fuente de verdad, y solo luego establecer la referencia `legacy-v1` y ramas de trabajo— es razonable, pero queda bloqueada por esos datos y aprobación. El agente no ejecutó ni propone ejecutar operaciones de Git; Ezequiel mantiene el control de todas ellas. Mantener `main` sin cambios hasta el release aprobado y confirmar previews antes de cualquier despliegue.
+
+## Actualización de Fase 5 — 2026-10-23
+
+El apartado anterior documenta el estado de la auditoría inicial; ya no describe el estado actual del repositorio.
+
+- Repositorio local: `C:\Users\SystemAncestral\Documents\portfolio`, rama `phase-3-interactions`, HEAD `da0ec138bf4a250df9ed90f33502ca1d465f7879`; árbol de trabajo limpio al iniciar esta revisión.
+- GitHub: `main`=`ea39660`, `phase-3-interactions`=`da0ec13`, `modernization`=`b5c55fc`. El PR #7 integró `d76da04` directamente de la rama de fase a `main`; `modernization` sigue en el snapshot legado.
+- Tag remoto `legacy-v1` presente; commit etiquetado `b5c55fc`.
+- Producción observada en `https://portafolio-cano.netlify.app/`; Netlify confirmado por el dominio y los checks de deploy. La configuración exacta de rama de producción no se obtuvo.
+- GitHub reporta cero workflows de Actions y cero rulesets; `main` figura como no protegida. Los checks observados en PR #7 fueron de Netlify, no suites de código.
+- La ruta antigua `/cv_ezequiel.pdf` responde 301 hacia `/cv-es.pdf`; los CV ES/EN y certificados responden 200 en producción.
+- Ezequiel confirmó como enlace intencional del proyecto Hotelera JH `https://github.com/canoezequiel7k-sys/BelgranoJH`; GitHub devuelve 404 sin autenticación, así que su visibilidad pública sigue sin verificarse. Se conservó el destino. El enlace de `Imc_calculator_app` responde 200.

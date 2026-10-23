@@ -23,17 +23,17 @@
 
 ## Fase 3
 
-| Decisión                                         | Motivo                                                                                        | Estado       |
-| ------------------------------------------------ | --------------------------------------------------------------------------------------------- | ------------ |
-| Menú como botón accesible                        | `aria-expanded`, enlaces inertes al cerrar, Tab/foco, cierre con Escape y click externo.      | Implementado |
-| Reveal con IntersectionObserver y GSAP           | Conserva el stagger de 150 ms y evita cálculos por cada evento de scroll.                     | Implementado |
-| Canvas de 180 partículas con pausa y DPR         | Evita trabajo oculto, mantiene partículas en resize y protege los cálculos no finitos.        | Implementado |
-| Ojos siguen puntero fino; idle en táctil         | Ezequiel eligió idle táctil; seguimiento acotado a seis unidades SVG en dispositivos finos.   | Implementado |
-| Tilt GSAP solo con hover/puntero fino            | Conserva intensidades 8 y 12 sin competir con gestos táctiles.                                | Implementado |
-| Typewriter 120 ms; no reiniciar en cambio idioma | Preferencia elegida por Ezequiel; reduced motion completa el texto sin animarlo.              | Implementado |
-| Marquee CSS duplicado accesible                  | Dos grupos idénticos, copia oculta a lectores de pantalla y ciclo de 25 segundos.             | Implementado |
-| Tema e idioma con mejora View Transitions        | Persiste tema y sección; fallback normal. El idioma se recuerda solo tras elección explícita. | Implementado |
-| Excluir crawlers de la redirección por idioma    | La preferencia guardada no altera el idioma de rastreo ni crea detección automática.          | Implementado |
+| Decisión                                         | Motivo                                                                                                                    | Estado       |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| Menú como botón accesible                        | `aria-expanded`, enlaces inertes al cerrar, Tab/foco, cierre con Escape y click externo.                                  | Implementado |
+| Reveal con IntersectionObserver y GSAP           | Conserva el stagger de 150 ms y evita cálculos por cada evento de scroll.                                                 | Implementado |
+| Canvas de 180 partículas con pausa y DPR         | Evita trabajo oculto, mantiene partículas en resize y protege los cálculos no finitos.                                    | Implementado |
+| Ojos siguen puntero fino; idle en táctil         | Ezequiel eligió idle táctil; seguimiento acotado a seis unidades SVG en dispositivos finos.                               | Implementado |
+| Tilt GSAP solo con hover/puntero fino            | Conserva intensidades 8 y 12 sin competir con gestos táctiles.                                                            | Implementado |
+| Typewriter 120 ms; no reiniciar en cambio idioma | Preferencia elegida por Ezequiel; reduced motion completa el texto sin animarlo.                                          | Implementado |
+| Marquee CSS duplicado accesible                  | Dos grupos idénticos, copia oculta a lectores de pantalla y ciclo de 25 segundos.                                         | Implementado |
+| Tema con View Transitions; idioma nativo         | Persiste tema y sección. Se retiró la transición entre documentos tras errores Chromium; navegación funciona normalmente. | Implementado |
+| Excluir crawlers de la redirección por idioma    | La preferencia guardada no altera el idioma de rastreo ni crea detección automática.                                      | Implementado |
 
 ## Propiedad de animaciones
 
@@ -48,7 +48,7 @@ Cada propiedad animada tiene un único propietario salvo coordinación documenta
 | Typewriter                   | Feature TypeScript          | Feature aislada, con reduced motion                   | 3    |
 | Marquee                      | CSS                         | CSS                                                   | 3    |
 | Tema                         | Feature + View Transitions  | View Transitions con alternativa CSS                  | 3    |
-| Idioma                       | Enlace HTML + feature       | Navegación nativa y View Transitions progresivas      | 3    |
+| Idioma                       | Enlace HTML + feature       | Navegación nativa                                     | 3    |
 | Partículas                   | Feature canvas con rAF      | rAF propio, pausado en segundo plano                  | 3    |
 
 Las rutas Vite ya no cargan `script.js`: las interacciones migradas se inicializan desde `src/features/index.ts` y devuelven limpieza para HMR. El archivo y el HTML legacy de la raíz se conservan juntos para no dejar rota esa entrada independiente.

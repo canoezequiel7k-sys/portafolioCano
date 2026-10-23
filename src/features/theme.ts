@@ -5,7 +5,6 @@ type ViewTransitionDocument = Document & {
     readonly finished: Promise<void>;
     readonly ready: Promise<void>;
     readonly updateCallbackDone: Promise<void>;
-    skipTransition: () => void;
   };
 };
 
@@ -93,7 +92,6 @@ export function initializeTheme(root: Document): () => void {
   };
   const handlePageHide = (): void => {
     isLeaving = true;
-    activeTransition?.skipTransition();
     activeTransition = null;
   };
 

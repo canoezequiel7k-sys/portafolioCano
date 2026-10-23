@@ -10,3 +10,4 @@ Los cambios se agrupan bajo `Unreleased` hasta que Ezequiel autorice y publique 
 - Configuración de build, cabeceras HTTP y redirección 301 del CV anterior para Netlify.
 - CV localizados en español e inglés; pruebas automatizadas verifican sus enlaces y recursos en ambas versiones.
 - Certificados conservan sus URLs actuales. Se retiró `noindex` tras la aprobación del contenido inglés (2026-10-23).
+- Navegación de idioma nativa; se desactivó la transición entre documentos que provocaba errores Chromium.

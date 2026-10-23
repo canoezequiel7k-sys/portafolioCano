@@ -125,6 +125,15 @@ test("keeps internal links valid in Spanish and English", async ({ page }) => {
   }
 });
 
+test("switches language without browser runtime errors", async ({ page }) => {
+  const pageErrors: string[] = [];
+  page.on("pageerror", (error) => pageErrors.push(error.message));
+  await page.goto("/");
+  await page.locator(".language-switch").click();
+  await expect(page).toHaveURL(/\/en\/#inicio$/);
+  expect(pageErrors).toEqual([]);
+});
+
 test("shows the supplied skills and keeps the marquee in one row on mobile", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
@@ -292,11 +301,16 @@ test("supports keyboard navigation and a persistent accessible theme toggle", as
 test("preserves section and theme across language changes without replaying the intro", async ({
   page,
 }) => {
+  const pageErrors: string[] = [];
+  page.on("pageerror", (error) => pageErrors.push(error.message));
   await page.goto("/");
   await page.locator("#dark-toggle").click();
+  await page.waitForTimeout(300);
+  expect(pageErrors).toEqual([]);
   await page.locator(".menu-toggle").click();
   await page.locator('#side-navigation a[href="#acerca"]').click();
   await expect(page).toHaveURL(/#acerca$/);
+  expect(pageErrors).toEqual([]);
 
   await page.locator(".language-switch").click();
   await expect(page).toHaveURL(/\/en\/#acerca$/);
@@ -309,6 +323,7 @@ test("preserves section and theme across language changes without replaying the 
   await page.locator(".language-switch").click();
   await expect(page).toHaveURL(/\/#inicio$/);
   await expect(page.locator("html")).toHaveAttribute("lang", "es");
+  expect(pageErrors).toEqual([]);
 });
 
 test("respects reduced motion for the typewriter, marquee, and section scroll", async ({

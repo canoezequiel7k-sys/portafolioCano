@@ -12,6 +12,14 @@ describe("renderPage", () => {
   it("renders the approved English copy without a draft notice", () => {
     expect(renderPage("en")).not.toContain("translation draft");
   });
+
+  it("renders the supplied experience and project entries in both locales", () => {
+    expect(renderPage("es")).toContain("Desarrollador web independiente");
+    expect(renderPage("es")).toContain("Mimun — Diario emocional");
+    expect(renderPage("en")).toContain("Independent Web Developer");
+    expect(renderPage("en")).toContain("Mimun — Emotional journal");
+    expect(renderPage("en")).toContain("/assets/images/project-placeholder.svg");
+  });
 });
 
 // Evita que los caracteres de contenido se interpreten como marcado HTML.

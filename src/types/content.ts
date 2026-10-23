@@ -8,7 +8,8 @@ export type Localized = Readonly<Record<Locale, string>>;
 export interface Experience {
   readonly role: Localized;
   readonly organization: string;
-  readonly location: Localized;
+  readonly location?: Localized;
+  readonly period: Localized;
   readonly description: Localized;
 }
 

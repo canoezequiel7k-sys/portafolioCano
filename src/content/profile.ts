@@ -18,32 +18,74 @@ export const profile: ProfileContent = {
   experience: [
     {
       role: {
-        es: "Operador de TI",
-        en: "IT Operator",
+        es: "Desarrollador de aplicaciones",
+        en: "Application Developer",
       },
-      organization: "Coto CICSA",
-      location: {
-        es: "Av. Boedo",
-        en: "Boedo Avenue",
+      organization: "COTO",
+      period: {
+        es: "ago. 2025 – may. 2026 · 10 meses",
+        en: "Aug 2025 – May 2026 · 10 months",
       },
       description: {
-        es: "Atención y soporte directo a usuarios, resolviendo incidencias de hardware y software de forma rápida y clara. Mantenimiento preventivo de equipos y redes, garantizando la continuidad operativa del negocio. Trabajo en equipo con otras áreas para optimizar procesos, utilizando Windows Server, Active Directory y sistemas de ticketing.",
-        en: "Direct user support, resolving hardware and software incidents quickly and clearly. Preventive maintenance of equipment and networks to ensure business continuity. Collaboration with other teams to improve processes using Windows Server, Active Directory, and ticketing systems.",
+        es: "Mantenimiento y actualización de las aplicaciones utilizadas en distintas sucursales de COTO.",
+        en: "Maintained and updated applications used across selected COTO branches.",
       },
     },
     {
       role: {
-        es: "Full Stack Developer",
+        es: "Desarrollador Full Stack",
         en: "Full Stack Developer",
       },
-      organization: "Hotelera JH",
+      organization: "Apart JH Belgrano Nordic",
       location: {
-        es: "Belgrano",
-        en: "Belgrano",
+        es: "José Hernández 2730, Belgrano · Remoto",
+        en: "José Hernández 2730, Belgrano · Remote",
+      },
+      period: {
+        es: "sept. 2025 · 1 mes",
+        en: "Sep 2025 · 1 month",
       },
       description: {
-        es: "Desarrollo de una aplicación de escritorio para hotelería, enfocada en la gestión de habitaciones. Incluye reservas, control de ocupación, check-in y check-out, registro de habitaciones en mantenimiento y generación de reportes de estadía. La herramienta mejoró la organización del personal y agilizó la atención a clientes, utilizando Python + MySQL.",
-        en: "Development of a desktop application for hotel operations, focused on room management. It includes reservations, occupancy tracking, check-in and check-out, maintenance records, and stay reports. The tool improved staff organization and streamlined customer service, using Python + MySQL.",
+        es: "Desarrollo de una aplicación de escritorio para gestionar habitaciones, reservas, ocupación, check-in/check-out y reportes de estadía, utilizando Java, Python y MySQL.",
+        en: "Developed a desktop application for room management, reservations, occupancy, check-in/check-out, and stay reports using Java, Python, and MySQL.",
+      },
+    },
+    {
+      role: {
+        es: "Desarrollador web independiente",
+        en: "Independent Web Developer",
+      },
+      organization: "Profesional independiente",
+      location: {
+        es: "Remoto",
+        en: "Remote",
+      },
+      period: {
+        es: "may. 2023 – sept. 2025 · 2 años y 5 meses",
+        en: "May 2023 – Sep 2025 · 2 years and 5 months",
+      },
+      description: {
+        es: "Creación de sitios y aplicaciones web funcionales y atractivos, adaptados a las necesidades de cada cliente.",
+        en: "Created functional, engaging websites and web applications tailored to each client's needs.",
+      },
+    },
+    {
+      role: {
+        es: "Desarrollador Frontend",
+        en: "Frontend Developer",
+      },
+      organization: "Enta Consulting",
+      location: {
+        es: "Argentina · Remoto",
+        en: "Argentina · Remote",
+      },
+      period: {
+        es: "nov. 2023 – feb. 2024 · 4 meses",
+        en: "Nov 2023 – Feb 2024 · 4 months",
+      },
+      description: {
+        es: "Edición y mejora del sitio web de la empresa, con foco en optimizar el diseño, la funcionalidad y la experiencia de usuario.",
+        en: "Updated and improved the company's website, focusing on design, functionality, and user experience.",
       },
     },
   ],
@@ -178,6 +220,78 @@ export const profile: ProfileContent = {
       imageHeight: 865,
       image: "/assets/images/proyecto2.webp",
       repository: "https://github.com/canoezequiel7k-sys/Imc_calculator_app.git",
+    },
+    {
+      title: {
+        es: "Mimun — Diario emocional",
+        en: "Mimun — Emotional journal",
+      },
+      description: {
+        es: "Aplicación móvil de bienestar emocional con registro de estados de ánimo, notas y estadísticas. Desarrollada con Kotlin, Jetpack Compose, FastAPI y PostgreSQL.",
+        en: "A mobile emotional-wellbeing app with mood tracking, notes, and statistics, built with Kotlin, Jetpack Compose, FastAPI, and PostgreSQL.",
+      },
+      imageAlt: {
+        es: "Imagen ilustrativa temporal para Mimun; pendiente de reemplazar por una captura.",
+        en: "Temporary illustration for Mimun; replace with a project screenshot.",
+      },
+      imageWidth: 1200,
+      imageHeight: 750,
+      image: "/assets/images/project-placeholder.svg",
+      repository: "https://github.com/canoezequiel7k-sys/Mimun",
+    },
+    {
+      title: {
+        es: "Somphie Zúrich",
+        en: "Somphie Zurich",
+      },
+      description: {
+        es: "Sistema de gestión para cafetería que integra pedidos de clientes mediante QR, una app para el personal y un panel administrativo. Proyecto en desarrollo con React, Kotlin, Spring Boot y PostgreSQL.",
+        en: "A café-management system connecting QR-based customer orders, a staff app, and an admin panel. In development with React, Kotlin, Spring Boot, and PostgreSQL.",
+      },
+      imageAlt: {
+        es: "Imagen ilustrativa temporal para Somphie Zúrich; pendiente de reemplazar por una captura.",
+        en: "Temporary illustration for Somphie Zurich; replace with a project screenshot.",
+      },
+      imageWidth: 1200,
+      imageHeight: 750,
+      image: "/assets/images/project-placeholder.svg",
+      repository: "https://github.com/canoezequiel7k-sys/SomphieZurich",
+    },
+    {
+      title: {
+        es: "Webcam Object Detector",
+        en: "Webcam Object Detector",
+      },
+      description: {
+        es: "Detector de objetos en tiempo real desde la webcam, con opción de guardar capturas. Desarrollado con Python, YOLOv8 y OpenCV.",
+        en: "Detects objects in real time through a webcam and can save image captures. Built with Python, YOLOv8, and OpenCV.",
+      },
+      imageAlt: {
+        es: "Imagen ilustrativa temporal para Webcam Object Detector; pendiente de reemplazar por una captura.",
+        en: "Temporary illustration for Webcam Object Detector; replace with a project screenshot.",
+      },
+      imageWidth: 1200,
+      imageHeight: 750,
+      image: "/assets/images/project-placeholder.svg",
+      repository: "https://github.com/canoezequiel7k-sys/webcam_detecter",
+    },
+    {
+      title: {
+        es: "Mimirn't — Asistente anti-sueño",
+        en: "Mimirn't — Anti-sleep assistant",
+      },
+      description: {
+        es: "Aplicación de escritorio que detecta ojos cerrados y activa alarmas y notificaciones para ayudar a mantenerse despierto frente a la computadora.",
+        en: "A desktop app that detects closed eyes and triggers alarms and notifications to help users stay alert at their computer.",
+      },
+      imageAlt: {
+        es: "Imagen ilustrativa temporal para Mimirn't; pendiente de reemplazar por una captura.",
+        en: "Temporary illustration for Mimirn't; replace with a project screenshot.",
+      },
+      imageWidth: 1200,
+      imageHeight: 750,
+      image: "/assets/images/project-placeholder.svg",
+      repository: "https://github.com/canoezequiel7k-sys/Mimirnt",
     },
   ],
 };

@@ -135,6 +135,7 @@ export function renderPage(locale: Locale): string {
               <line x1="80" y1="45" x2="120" y2="45" stroke="currentColor" stroke-width="4"/>
               <circle id="ojo-izq" cx="45" cy="45" r="10" fill="currentColor"/>
               <circle id="ojo-der" cx="155" cy="45" r="10" fill="currentColor"/>
+              <path d="M87 79 C88 75 92 74 100 74 C108 74 112 75 113 79 C112 83 108 86 100 86 C92 86 88 83 87 79 Z" fill="currentColor"/>
             </svg>
           </div>
           <h2 class="typewriter" id="typewriter-text" data-text="${text(intro, locale)}" aria-label="${text(intro, locale)}" aria-live="off"></h2>

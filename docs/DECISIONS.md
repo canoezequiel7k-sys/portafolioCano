@@ -7,19 +7,19 @@
 | Vite + TypeScript estricto                 | Build estático, rutas de desarrollo sencillas y datos localizados tipados.                                                        | Implementado       |
 | ES/EN prerenderizados por URL              | `/` conserva el idioma por defecto; `/en/` tiene URL propia y markup disponible sin renderizar el contenido de perfil en cliente. | Spike implementado |
 | Renderer puro de HTML                      | Separa contenido de DOM; permite construir ambos idiomas en build.                                                                | Implementado       |
-| EN permanece como borrador `noindex`       | La traducción no está aprobada; no debe indexarse/publicarse como definitiva.                                                     | Hasta aprobación   |
+| EN inicialmente `noindex`                  | No indexar antes de aprobación editorial. Ezequiel aprobó los textos el 2026-10-23; se retiró `noindex`.                          | Supersedida        |
 | Mantener temporalmente CSS y script legacy | Fase 1 configura arquitectura; el rediseño y migración de interacciones pertenecen a fases posteriores.                           | Provisional        |
 | Conservar rutas actuales de PDF y assets   | Evita romper URLs potencialmente compartidas.                                                                                     | Implementado       |
 | Netlify publica `dist/` en build           | Proveedor confirmado; la configuración no se ha desplegado desde esta rama.                                                       | Preliminar         |
 
 ## Fase 2
 
-| Decisión                                | Motivo                                                                                      | Estado       |
-| --------------------------------------- | ------------------------------------------------------------------------------------------- | ------------ |
-| Conservar el scroll dentro de `main`    | Mantiene el comportamiento legacy de navegación y reveal mientras se hace fluido el layout. | Implementado |
-| Permitir que las secciones crezcan      | El contenido no se recorta en móvil, apaisado o con texto más largo.                        | Implementado |
-| Selector ES/EN como enlace con fallback | Funciona sin JavaScript y anuncia idioma de destino con `hreflang` y `lang`.                | Implementado |
-| Mantener EN como borrador               | El enlace no constituye aprobación editorial ni habilita indexación.                        | Sin cambios  |
+| Decisión                                | Motivo                                                                                       | Estado       |
+| --------------------------------------- | -------------------------------------------------------------------------------------------- | ------------ |
+| Conservar el scroll dentro de `main`    | Mantiene el comportamiento legacy de navegación y reveal mientras se hace fluido el layout.  | Implementado |
+| Permitir que las secciones crezcan      | El contenido no se recorta en móvil, apaisado o con texto más largo.                         | Implementado |
+| Selector ES/EN como enlace con fallback | Funciona sin JavaScript y anuncia idioma de destino con `hreflang` y `lang`.                 | Implementado |
+| Mantener EN como borrador               | Se mantuvo sin indexar hasta aprobación explícita. Ezequiel aprobó los textos el 2026-10-23. | Supersedida  |
 
 ## Fase 3
 

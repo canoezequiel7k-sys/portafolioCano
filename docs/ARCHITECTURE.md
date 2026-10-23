@@ -2,7 +2,7 @@
 
 ## Estado de Fase 1
 
-Aplicación estática sin framework UI. Vite sirve y compila el documento; TypeScript estricto comprueba los datos localizados y las funciones de presentación. `vite.config.ts` prerenderiza `/` (ES) y emite `/en/` (EN borrador) desde el mismo renderer puro. Los assets y PDF existentes se sirven durante el desarrollo y se copian al build sin mover el original.
+Aplicación estática sin framework UI. Vite sirve y compila el documento; TypeScript estricto comprueba los datos localizados y las funciones de presentación. `vite.config.ts` prerenderiza `/` (ES) y emite `/en/` (EN aprobado) desde el mismo renderer puro. Los assets y PDF existentes se sirven durante el desarrollo y se copian al build sin mover el original.
 
 ## Capas
 
@@ -16,11 +16,11 @@ Aplicación estática sin framework UI. Vite sirve y compila el documento; TypeS
 
 ## Build e idioma
 
-`npm run dev` sirve español en `/` e inglés en `/en/`. `npm run build` produce `dist/index.html`, `dist/en/index.html`, bundle JS/CSS, assets optimizados, favicon y los cuatro PDF. Los documentos EN llevan `noindex,nofollow` y un aviso de borrador hasta aprobación editorial. No existe redirección automática por idioma.
+`npm run dev` sirve español en `/` e inglés en `/en/`. `npm run build` produce `dist/index.html`, `dist/en/index.html`, bundle JS/CSS, assets optimizados, favicon y los PDF. El contenido inglés fue aprobado y ambas páginas son indexables. No existe redirección automática por idioma.
 
 Los metadatos localizados se generan con el build. `SITE_URL` establece el origen HTTPS canónico; en Netlify se usa `URL` como respaldo. Sin ambas variables, canonical, alternates, `og:url`, `sitemap.xml` y su referencia en `robots.txt` se omiten.
 
-El renderer comparte IDs y estructura de secciones entre ambos locales. Los recursos usan rutas desde la raíz para que funcionen también bajo `/en/`. El selector conserva sección y tema; la preferencia de idioma solo se guarda tras una elección explícita y la redirección de `/` excluye crawlers. La intro no se repite al cambiar de idioma. Los documentos EN continúan como borrador `noindex`.
+El renderer comparte IDs y estructura de secciones entre ambos locales. Los recursos usan rutas desde la raíz para que funcionen también bajo `/en/`. El selector conserva sección y tema; la preferencia de idioma solo se guarda tras una elección explícita y la redirección de `/` excluye crawlers. La intro no se repite al cambiar de idioma. El contenido inglés fue aprobado y se indexa.
 
 ## Calidad y ciclo de vida
 
@@ -31,6 +31,7 @@ Las pruebas E2E comprueban ambos idiomas, metadatos y rutas, imágenes con dimen
 ## Archivos principales
 
 - Configuración: `package.json`, `tsconfig.json`, `vite.config.ts`, `eslint.config.js`, `.dependency-cruiser.cjs`.
+- Hosting: `netlify.toml` define el build, `dist/` como salida, cabeceras HTTP básicas y la redirección 301 del CV anterior a `/cv-es.pdf`. Los CV actuales se publican en `/cv-es.pdf` y `/cv-en.pdf`.
 - Contenido: `src/content/profile.ts`, `src/content/ui.ts`.
 - Renderizado y locale: `src/components/render-page.ts`, `src/core/i18n/locale.ts`.
 - Pruebas: `src/**/*.test.ts`, `tests/e2e/`.

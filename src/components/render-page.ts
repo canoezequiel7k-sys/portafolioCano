@@ -71,6 +71,7 @@ export function renderPage(locale: Locale): string {
   const languageCert = profile.languageLevel[locale];
   const languageLabel = locale === "es" ? "Inglés B1" : "English B1";
   const languageText = `<a href="/ingles_certificado.pdf" target="_blank" class="cert-link">${escapeHtml(languageLabel)}</a>${escapeHtml(languageCert.replace(languageLabel, ""))}`;
+  const cvPath = locale === "es" ? "/cv-es.pdf" : "/cv-en.pdf";
 
   return `
     <canvas id="background-canvas" aria-hidden="true"></canvas>
@@ -166,7 +167,7 @@ export function renderPage(locale: Locale): string {
             </div>
           </div>
           <div class="cv-container fade-text delay4">
-            <a href="/cv_ezequiel.pdf" target="_blank" class="btn-cv">📄 ${escapeHtml(copy.downloadCv.replace("📄 ", ""))}</a>
+            <a href="${cvPath}" target="_blank" rel="noopener noreferrer" class="btn-cv">📄 ${escapeHtml(copy.downloadCv.replace("📄 ", ""))}</a>
           </div>
           <div class="card-wrapper fade-text delay5">
             <div class="certificaciones-container">
@@ -193,6 +194,5 @@ export function renderPage(locale: Locale): string {
         </div>
       </footer>
     </main>
-    ${locale === "en" ? `<p class="translation-notice" role="status">${escapeHtml(copy.draftNotice)}</p>` : ""}
   `;
 }

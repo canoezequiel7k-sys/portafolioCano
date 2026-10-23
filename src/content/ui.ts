@@ -30,7 +30,6 @@ export interface UiCopy {
   readonly linkedin: string;
   readonly github: string;
   readonly email: string;
-  readonly draftNotice: string;
   readonly profilePhotoAlt: string;
   readonly footer: string;
 }
@@ -66,7 +65,6 @@ export const ui: Readonly<Record<Locale, UiCopy>> = {
     linkedin: "LinkedIn",
     github: "GitHub",
     email: "Email",
-    draftNotice: "",
     profilePhotoAlt: "Retrato de Ezequiel Cano",
     footer: "© 2025 Ezequiel Cano · Desarrollador Web",
   },
@@ -100,7 +98,6 @@ export const ui: Readonly<Record<Locale, UiCopy>> = {
     linkedin: "LinkedIn",
     github: "GitHub",
     email: "Email",
-    draftNotice: "English translation draft — pending Ezequiel's approval.",
     profilePhotoAlt: "Portrait of Ezequiel Cano",
     footer: "© 2025 Ezequiel Cano · Web Developer",
   },

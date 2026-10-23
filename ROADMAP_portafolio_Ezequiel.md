@@ -16,7 +16,7 @@ Documento operativo. La especificación completa (reglas, criterios de aceptaci�
 | ------ | -------------------------------- | ---------------------------------------------------------------------------------- |
 | **E**  | Ezequiel                         | Aporta datos, decide y aprueba.                                                    |
 | **A1** | Agente Arquitectura + Calidad    | Estructura, build, herramientas, pruebas, accesibilidad, SEO técnico, rendimiento. |
-| **A2** | Agente Contenido + Documentación | Perfil, contenido tipado y localizado, traducciones (borrador), docs.              |
+| **A2** | Agente Contenido + Documentación | Perfil, contenido tipado y localizado, traducciones EN aprobadas, docs.            |
 | **A3** | Agente UI + Interacciones        | Componentes, estilos, responsive, GSAP, canvas, tema, selector de idioma.          |
 
 ## Decisiones ya tomadas
@@ -116,7 +116,7 @@ Documento operativo. La especificación completa (reglas, criterios de aceptaci�
 ### A2 — Contenido + documentación
 
 - [ ] **(M)** Tipos `Locale` y `Localized`; el compilador falla si falta un idioma
-- [ ] **(M)** `content/` migrado del HTML actual a datos tipados (ES completo; EN como borrador marcado **pendiente de aprobación**)
+- [x] **(M)** `content/` migrado a datos tipados en ES/EN; Ezequiel aprobó el contenido inglés el 2026-10-23
 - [ ] **(S)** `content/ui.ts` con los textos de interfaz
 - [ ] **(M)** `README.md`, `docs/ARCHITECTURE.md`, `docs/CONTENT_GUIDE.md`, `docs/DECISIONS.md` (borrador inicial)
 
@@ -242,18 +242,20 @@ Documento operativo. La especificación completa (reglas, criterios de aceptaci�
 
 ### A1 — Arquitectura + calidad
 
-- [ ] **(M)** Regresión completa y comprobación de enlaces, en ES y EN
-- [ ] **(M)** `netlify.toml` final: build, publicación de `dist`, cabeceras
-- [ ] **(S)** Redirecciones 301 de URLs antiguas (CV y certificados)
+- [x] **(M)** Regresión completa y comprobación de enlaces internos, en ES y EN (Playwright; enlaces externos validados por esquema, no por disponibilidad)
+- [x] **(M)** `netlify.toml`: build, publicación de `dist` y cabeceras HTTP básicas
+- [x] **(S)** Redirección 301 de `/cv_ezequiel.pdf` a `/cv-es.pdf`; certificados mantienen sus rutas. Validar el estado HTTP en deploy preview pendiente.
 - [ ] **(M)** Deploy preview de `modernization`: comprobar rutas, recursos, PDFs y metadatos **en la versión desplegada**
 - [ ] **(S)** Verificar que el selector de idioma y el tema funcionan en la versión desplegada
 
 ### A2 — Contenido + documentación
 
-- [ ] **(M)** Documentación final alineada con el código real
-- [ ] **(S)** `CHANGELOG.md` completo
+- [x] **(M)** Documentación final alineada con el código real
+- [x] **(S)** `CHANGELOG.md` inicializado; la versión se mantiene como `Unreleased`
 
 ### Gate G5 — Release
+
+**Estado:** preparación local validada parcialmente; no es un release. El contenido inglés fue aprobado. La preview compartida aún sirve un build anterior: actualizarla y verificar rutas, metadatos, PDFs y redirecciones tras el siguiente push. No hacer merge, tag ni publicar sin autorización explícita de Ezequiel.
 
 - [ ] Todos los criterios globales del plan (sección 18) cumplidos
 - [ ] **E** autoriza explícitamente el release

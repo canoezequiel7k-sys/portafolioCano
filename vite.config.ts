@@ -11,6 +11,8 @@ const projectRoot = fileURLToPath(new URL(".", import.meta.url));
 const sourceRoot = resolve(projectRoot, "src");
 const documents = new Set([
   "cv_ezequiel.pdf",
+  "cv-es.pdf",
+  "cv-en.pdf",
   "ingles_certificado.pdf",
   "freecodecamp.pdf",
   "coderhause.pdf",
@@ -163,9 +165,7 @@ function localizedPages(): Plugin {
           .replace("<!--theme-bootstrap-->", themeBootstrap)
           .replace("__PAGE_TITLE__", escapeHtml(ui[locale].pageTitle))
           .replace("<!--portfolio-body-->", renderPage(locale));
-        return locale === "en"
-          ? page.replace("</head>", '<meta name="robots" content="noindex, nofollow" /></head>')
-          : page;
+        return page;
       },
     },
     generateBundle: {
@@ -192,8 +192,7 @@ function localizedPages(): Plugin {
           .replace(
             /<body>[\s\S]*?<\/body>/,
             `<body>\n${themeBootstrap}\n${renderPage("en")}\n${moduleScript}\n</body>`,
-          )
-          .replace("</head>", '<meta name="robots" content="noindex, nofollow" /></head>');
+          );
         this.emitFile({
           type: "asset",
           fileName: "en/index.html",

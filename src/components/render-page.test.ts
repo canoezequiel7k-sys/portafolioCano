@@ -8,8 +8,8 @@ describe("renderPage", () => {
     expect(sectionIds(renderPage("es"))).toEqual(sectionIds(renderPage("en")));
   });
 
-  it("marks the unapproved English copy as a draft", () => {
-    expect(renderPage("en")).toContain("English translation draft");
+  it("renders the approved English copy without a draft notice", () => {
+    expect(renderPage("en")).not.toContain("translation draft");
   });
 });
 

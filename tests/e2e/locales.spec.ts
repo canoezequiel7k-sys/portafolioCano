@@ -1,17 +1,18 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-test("serves equivalent Spanish and English draft pages", async ({ page }) => {
+test("serves equivalent Spanish and English pages", async ({ page }) => {
   const expectedSectionIds = ["inicio", "trabajos", "acerca", "proyectos"];
 
   for (const locale of [
-    { path: "/", lang: "es" },
-    { path: "/en/", lang: "en" },
+    { path: "/", lang: "es", cv: "/cv-es.pdf" },
+    { path: "/en/", lang: "en", cv: "/cv-en.pdf" },
   ]) {
     await page.goto(locale.path);
     await expect(page.locator("html")).toHaveAttribute("lang", locale.lang);
     await expect(page).toHaveTitle(/Ezequiel Cano/);
     await expect(page.locator("header h1")).toHaveText("Ezequiel Cano");
+    await expect(page.locator(".btn-cv")).toHaveAttribute("href", locale.cv);
     await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", /\S+/);
     await expect(page.locator('meta[property="og:locale"]')).toHaveCount(1);
     await expect(page.locator("h1")).toHaveCount(1);
@@ -37,12 +38,7 @@ test("serves equivalent Spanish and English draft pages", async ({ page }) => {
     } else {
       await expect(canonical).toHaveCount(0);
     }
-    if (locale.lang === "en") {
-      await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
-        "content",
-        "noindex, nofollow",
-      );
-    }
+    await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
     await page.keyboard.press("Tab");
     await expect(page.locator(".skip-link")).toBeFocused();
     for (const id of expectedSectionIds) {
@@ -76,6 +72,8 @@ test("serves equivalent Spanish and English draft pages", async ({ page }) => {
     }
     for (const documentPath of [
       "/cv_ezequiel.pdf",
+      "/cv-es.pdf",
+      "/cv-en.pdf",
       "/ingles_certificado.pdf",
       "/freecodecamp.pdf",
       "/coderhause.pdf",
@@ -95,7 +93,36 @@ test("serves equivalent Spanish and English draft pages", async ({ page }) => {
     await page.locator("#dark-toggle").click();
   }
 
-  await expect(page.getByText("English translation draft", { exact: false })).toBeVisible();
+  await expect(page.getByText("English translation draft", { exact: false })).toHaveCount(0);
+});
+
+test("keeps internal links valid in Spanish and English", async ({ page }) => {
+  for (const path of ["/", "/en/"]) {
+    await page.goto(path);
+    const links = await page
+      .locator("a[href]")
+      .evaluateAll((anchors) => anchors.map((anchor) => (anchor as HTMLAnchorElement).href));
+
+    for (const href of links) {
+      const url = new URL(href);
+      if (url.origin === new URL(page.url()).origin) {
+        if (url.hash) {
+          const targetId = decodeURIComponent(url.hash.slice(1));
+          expect(
+            await page.evaluate((id) => document.getElementById(id) !== null, targetId),
+            `${path} contains a link to missing target ${url.hash}`,
+          ).toBeTruthy();
+        } else {
+          const response = await page.request.get(`${url.pathname}${url.search}`);
+          expect(response.ok(), `${path} contains a broken internal link: ${href}`).toBeTruthy();
+        }
+      } else {
+        expect(["https:", "mailto:"], `${path} contains an unsupported link: ${href}`).toContain(
+          url.protocol,
+        );
+      }
+    }
+  }
 });
 
 test("shows the supplied skills and keeps the marquee in one row on mobile", async ({ page }) => {

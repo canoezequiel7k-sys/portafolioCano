@@ -315,23 +315,41 @@ test("supports keyboard navigation and a persistent accessible theme toggle", as
 // Comprueba el color calculado de lentes y pupilas en ambos temas.
 test("adapts the glasses and eyes color to the selected theme", async ({ page }) => {
   await page.goto("/");
-  const assertCharacterColor = async (expectedColor: string): Promise<void> => {
-    const [glasses, eyes] = await Promise.all([
-      page.locator(".personaje rect").evaluateAll((elements) =>
-        elements.map((element) => getComputedStyle(element).stroke),
-      ),
-      page.locator(".personaje circle").evaluateAll((elements) =>
-        elements.map((element) => getComputedStyle(element).fill),
-      ),
-    ]);
-    expect(glasses).toEqual([expectedColor, expectedColor]);
-    expect(eyes).toEqual([expectedColor, expectedColor]);
-  };
+  const glasses = page.locator(".personaje rect");
+  const eyes = page.locator(".personaje circle");
+  const mustache = page.locator(".personaje path");
 
-  await assertCharacterColor("rgb(17, 17, 17)");
-
-  await page.locator("#dark-toggle").click();
-  await assertCharacterColor("rgb(245, 245, 245)");
+  await expect(glasses).toHaveCount(2);
+  await expect(eyes).toHaveCount(2);
+  await expect(mustache).toHaveCount(1);
+  await expect(mustache).toHaveAttribute("fill", "currentColor");
+  await expect.poll(() => mustache.evaluate((element) => element.getBBox().y)).toBeGreaterThan(73);
+  await expect.poll(() => mustache.evaluate((element) => element.getBBox().x)).toBeLessThan(100);
+  await expect
+    .poll(() =>
+      mustache.evaluate((element) => {
+        const bounds = element.getBBox();
+        return bounds.x + bounds.width;
+      }),
+    )
+    .toBeGreaterThan(100);
+  for (const [theme, expectedColor] of [
+    ["claro", "rgb(17, 17, 17)"],
+    ["oscuro", "rgb(245, 245, 245)"],
+  ] as const) {
+    if (theme === "oscuro") {
+      await page.locator("#dark-toggle").click();
+    }
+    for (const [elements, property] of [
+      [glasses, "stroke"],
+      [eyes, "fill"],
+      [mustache, "fill"],
+    ] as const) {
+      for (const element of await elements.all()) {
+        await expect(element).toHaveCSS(property, expectedColor);
+      }
+    }
+  }
 });
 
 // Conserva sección y tema al navegar entre idiomas y evita repetir la introducción.

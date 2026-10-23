@@ -2,6 +2,8 @@ import type { Locale, Localized } from "../types/content.ts";
 
 export interface UiCopy {
   readonly pageTitle: string;
+  readonly ownerName: string;
+  readonly skipToContent: string;
   readonly menu: string;
   readonly navigationLabel: string;
   readonly home: string;
@@ -28,16 +30,15 @@ export interface UiCopy {
   readonly linkedin: string;
   readonly github: string;
   readonly email: string;
-  readonly draftNotice: string;
   readonly profilePhotoAlt: string;
-  readonly desktopProjectAlt: string;
-  readonly mobileProjectAlt: string;
   readonly footer: string;
 }
 
 export const ui: Readonly<Record<Locale, UiCopy>> = {
   es: {
-    pageTitle: "Mi Portafolio",
+    pageTitle: "Ezequiel Cano | Desarrollador Web y Full Stack Junior",
+    ownerName: "Ezequiel Cano",
+    skipToContent: "Saltar al contenido principal",
     menu: "Menu ☰",
     navigationLabel: "Navegación principal",
     home: "Inicio",
@@ -64,14 +65,13 @@ export const ui: Readonly<Record<Locale, UiCopy>> = {
     linkedin: "LinkedIn",
     github: "GitHub",
     email: "Email",
-    draftNotice: "",
-    profilePhotoAlt: "Mi foto",
-    desktopProjectAlt: "Proyecto 1",
-    mobileProjectAlt: "Proyecto 2",
+    profilePhotoAlt: "Retrato de Ezequiel Cano",
     footer: "© 2025 Ezequiel Cano · Desarrollador Web",
   },
   en: {
-    pageTitle: "Portfolio | Ezequiel Cano",
+    pageTitle: "Ezequiel Cano | Junior Web and Full Stack Developer",
+    ownerName: "Ezequiel Cano",
+    skipToContent: "Skip to main content",
     menu: "Menu ☰",
     navigationLabel: "Main navigation",
     home: "Home",
@@ -98,10 +98,7 @@ export const ui: Readonly<Record<Locale, UiCopy>> = {
     linkedin: "LinkedIn",
     github: "GitHub",
     email: "Email",
-    draftNotice: "English translation draft — pending Ezequiel's approval.",
-    profilePhotoAlt: "Profile photo",
-    desktopProjectAlt: "Desktop application project",
-    mobileProjectAlt: "Mobile application project",
+    profilePhotoAlt: "Portrait of Ezequiel Cano",
     footer: "© 2025 Ezequiel Cano · Web Developer",
   },
 };

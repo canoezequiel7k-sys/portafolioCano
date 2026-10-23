@@ -3,6 +3,7 @@ import { extname, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Plugin, UserConfig } from "vite";
 import { escapeHtml, renderPage } from "./src/components/render-page.ts";
+import { profile } from "./src/content/profile.ts";
 import { ui } from "./src/content/ui.ts";
 import { resolveLocale } from "./src/core/i18n/locale.ts";
 
@@ -10,10 +11,22 @@ const projectRoot = fileURLToPath(new URL(".", import.meta.url));
 const sourceRoot = resolve(projectRoot, "src");
 const documents = new Set([
   "cv_ezequiel.pdf",
+  "cv-es.pdf",
+  "cv-en.pdf",
   "ingles_certificado.pdf",
   "freecodecamp.pdf",
   "coderhause.pdf",
 ]);
+const configuredSiteUrl = (process.env.SITE_URL ?? process.env.URL)?.trim();
+const siteUrl = configuredSiteUrl ? new URL(configuredSiteUrl) : null;
+
+if (
+  siteUrl &&
+  (siteUrl.protocol !== "https:" || siteUrl.pathname !== "/" || siteUrl.search || siteUrl.hash)
+) {
+  throw new Error("SITE_URL must be the HTTPS origin of the public site, without a path.");
+}
+
 // Browsers percent-encode "+" in URLs, which the static preview server does not resolve.
 const assetAliases = new Map([["assets/icons/cpp.svg", "assets/icons/c++.svg"]]);
 const mimeTypes: Readonly<Record<string, string>> = {
@@ -45,6 +58,65 @@ const themeBootstrap = `<script>
   }
 </script>`;
 
+function seoMetadata(locale: "es" | "en"): string {
+  const description = profile.summary[locale];
+  const currentPath = locale === "es" ? "/" : "/en/";
+  const tags = [
+    `<meta name="description" content="${escapeHtml(description)}" />`,
+    `<meta name="author" content="Ezequiel Cano" />`,
+    `<meta property="og:type" content="website" />`,
+    `<meta property="og:site_name" content="Ezequiel Cano" />`,
+    `<meta property="og:title" content="${escapeHtml(ui[locale].pageTitle)}" />`,
+    `<meta property="og:description" content="${escapeHtml(description)}" />`,
+    `<meta property="og:locale" content="${locale === "es" ? "es_AR" : "en_US"}" />`,
+    `<meta property="og:locale:alternate" content="${locale === "es" ? "en_US" : "es_AR"}" />`,
+    '<meta name="twitter:card" content="summary_large_image" />',
+  ];
+
+  if (siteUrl) {
+    const canonical = new URL(currentPath, siteUrl).href;
+    tags.push(
+      `<link rel="canonical" href="${canonical}" />`,
+      `<link rel="alternate" hreflang="es" href="${new URL("/", siteUrl).href}" />`,
+      `<link rel="alternate" hreflang="en" href="${new URL("/en/", siteUrl).href}" />`,
+      `<link rel="alternate" hreflang="x-default" href="${new URL("/", siteUrl).href}" />`,
+      `<meta property="og:url" content="${canonical}" />`,
+      `<meta property="og:image" content="${new URL("/assets/images/foto-perfil.webp", siteUrl).href}" />`,
+      `<meta property="og:image:alt" content="${escapeHtml(ui[locale].profilePhotoAlt)}" />`,
+    );
+  }
+
+  return `<!--seo-meta-start-->\n${tags.join("\n")}\n<!--seo-meta-end-->`;
+}
+
+function sitemap(): string {
+  if (!siteUrl) {
+    return "";
+  }
+
+  const spanishUrl = new URL("/", siteUrl).href;
+  const englishUrl = new URL("/en/", siteUrl).href;
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>${spanishUrl}</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="${spanishUrl}" />
+    <xhtml:link rel="alternate" hreflang="en" href="${englishUrl}" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="${spanishUrl}" />
+  </url>
+  <url>
+    <loc>${englishUrl}</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="${spanishUrl}" />
+    <xhtml:link rel="alternate" hreflang="en" href="${englishUrl}" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="${spanishUrl}" />
+  </url>
+</urlset>`;
+}
+
+function robotsTxt(): string {
+  return `User-agent: *\nAllow: /\n${siteUrl ? `Sitemap: ${new URL("/sitemap.xml", siteUrl).href}\n` : ""}`;
+}
+
 async function listFiles(directory: string): Promise<string[]> {
   const entries = await readdir(directory, { withFileTypes: true });
   const nested = await Promise.all(
@@ -59,19 +131,41 @@ async function listFiles(directory: string): Promise<string[]> {
 function localizedPages(): Plugin {
   return {
     name: "localized-prerender",
+    configureServer(server) {
+      server.middlewares.use((request, response, next) => {
+        const pathname = new URL(request.url ?? "/", "http://vite.local").pathname;
+        if (pathname === "/robots.txt") {
+          response.statusCode = 200;
+          response.setHeader("Content-Type", "text/plain; charset=utf-8");
+          response.end(robotsTxt());
+          return;
+        }
+        if (pathname === "/sitemap.xml") {
+          if (!siteUrl) {
+            response.statusCode = 404;
+            response.end("Set SITE_URL to generate sitemap.xml.");
+            return;
+          }
+          response.statusCode = 200;
+          response.setHeader("Content-Type", "application/xml; charset=utf-8");
+          response.end(sitemap());
+          return;
+        }
+        next();
+      });
+    },
     transformIndexHtml: {
       order: "pre",
       handler(html, context) {
         const locale = resolveLocale(context.path);
         const page = html
           .replace('<html lang="es">', `<html lang="${locale}">`)
+          .replace("<!--seo-meta-->", seoMetadata(locale))
           .replace("<!--locale-bootstrap-->", localeBootstrap)
           .replace("<!--theme-bootstrap-->", themeBootstrap)
           .replace("__PAGE_TITLE__", escapeHtml(ui[locale].pageTitle))
           .replace("<!--portfolio-body-->", renderPage(locale));
-        return locale === "en"
-          ? page.replace("</head>", '<meta name="robots" content="noindex, nofollow" /></head>')
-          : page;
+        return page;
       },
     },
     generateBundle: {
@@ -94,16 +188,28 @@ function localizedPages(): Plugin {
         const englishHtml = spanishHtml
           .replace('<html lang="es">', '<html lang="en">')
           .replace(/<title>[\s\S]*?<\/title>/, `<title>${escapeHtml(ui.en.pageTitle)}</title>`)
+          .replace(/<!--seo-meta-start-->[\s\S]*?<!--seo-meta-end-->/, seoMetadata("en"))
           .replace(
             /<body>[\s\S]*?<\/body>/,
             `<body>\n${themeBootstrap}\n${renderPage("en")}\n${moduleScript}\n</body>`,
-          )
-          .replace("</head>", '<meta name="robots" content="noindex, nofollow" /></head>');
+          );
         this.emitFile({
           type: "asset",
           fileName: "en/index.html",
           source: englishHtml,
         });
+        this.emitFile({
+          type: "asset",
+          fileName: "robots.txt",
+          source: robotsTxt(),
+        });
+        if (siteUrl) {
+          this.emitFile({
+            type: "asset",
+            fileName: "sitemap.xml",
+            source: sitemap(),
+          });
+        }
       },
     },
   };

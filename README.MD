@@ -1,6 +1,6 @@
 # Portafolio de Ezequiel Cano
 
-Sitio estático ES/EN en migración a Vite + TypeScript. El inglés es un borrador no aprobado: `/en/` se genera con `noindex,nofollow` hasta recibir aprobación.
+Sitio estático ES/EN construido con Vite + TypeScript. La versión inglesa fue aprobada y ambas páginas son indexables.
 
 ## Requisitos
 
@@ -26,10 +26,12 @@ Sitio estático ES/EN en migración a Vite + TypeScript. El inglés es un borrad
 
 ## Contenido y documentación
 
-Edita `src/content/profile.ts` para el perfil y `src/content/ui.ts` para interfaz/metadata. Cada texto narrativo debe incluir `es` y `en`; TypeScript verifica que no falte idioma. El contenido inglés no está aprobado para publicación.
+Edita `src/content/profile.ts` para el perfil y `src/content/ui.ts` para interfaz/metadata. Cada texto narrativo debe incluir `es` y `en`; TypeScript verifica que no falte idioma. El contenido inglés fue aprobado el 2026-10-23.
 
 Consulta [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md), [docs/CONTENT_GUIDE.md](./docs/CONTENT_GUIDE.md) y [docs/DECISIONS.md](./docs/DECISIONS.md).
 
 La migración conserva por ahora `style.css`, `script.js`, `assets/` y los nombres actuales de PDF para no romper rutas existentes. No desplegar desde esta rama: Netlify usa `main` para producción.
 
 La aplicación servida por Vite inicializa las interacciones desde `src/features/`; el `index.html` y `script.js` de la raíz se conservan juntos como entrada legacy independiente.
+
+Netlify compila con `npm run build`, publica `dist/` y aplica cabeceras HTTP básicas desde `netlify.toml`. Los CV se sirven como `/cv-es.pdf` y `/cv-en.pdf`; `/cv_ezequiel.pdf` redirige al CV español para conservar enlaces antiguos.

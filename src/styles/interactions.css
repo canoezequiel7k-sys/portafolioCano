@@ -2,7 +2,23 @@
   navigation: auto;
 }
 
-main > .seccion,
+.skip-link {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 1200;
+  padding: 0.75rem 1rem;
+  transform: translateY(calc(-100% - 1rem));
+  border-radius: 0.375rem;
+  background: var(--color-text);
+  color: var(--color-page);
+  font-weight: 700;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
 main > .seccion .proyecto,
 main > .seccion .fade-text,
 main > .seccion .fade-in-seq,
@@ -10,6 +26,32 @@ main > .seccion .about-card,
 main > .seccion .cv-container,
 main > .seccion .card-wrapper {
   scroll-margin-top: calc(var(--header-height) + 1rem);
+}
+
+main > .seccion {
+  scroll-margin-top: var(--header-height);
+}
+
+main > .footer-seccion {
+  scroll-margin-top: var(--header-height);
+  scroll-snap-align: start;
+}
+
+header .contratame {
+  transition: none;
+}
+
+main .redes-footer a {
+  color: var(--color-accent);
+  transition: none;
+}
+
+main .redes-footer a:hover {
+  color: var(--color-accent-hover);
+}
+
+body.dark-mode main .redes-footer a:hover {
+  color: var(--color-accent-hover);
 }
 
 main > .seccion {

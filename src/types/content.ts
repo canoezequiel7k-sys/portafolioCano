@@ -22,6 +22,9 @@ export interface SkillGroup {
 export interface Project {
   readonly title: Localized;
   readonly description: Localized;
+  readonly imageAlt: Localized;
+  readonly imageWidth: number;
+  readonly imageHeight: number;
   readonly image: string;
   readonly repository: string;
 }

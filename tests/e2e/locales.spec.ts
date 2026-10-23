@@ -1,15 +1,46 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-test("serves equivalent Spanish and English draft pages", async ({ page }) => {
+test("serves equivalent Spanish and English pages", async ({ page }) => {
   const expectedSectionIds = ["inicio", "trabajos", "acerca", "proyectos"];
 
   for (const locale of [
-    { path: "/", lang: "es" },
-    { path: "/en/", lang: "en" },
+    { path: "/", lang: "es", cv: "/cv-es.pdf" },
+    { path: "/en/", lang: "en", cv: "/cv-en.pdf" },
   ]) {
     await page.goto(locale.path);
     await expect(page.locator("html")).toHaveAttribute("lang", locale.lang);
+    await expect(page).toHaveTitle(/Ezequiel Cano/);
+    await expect(page.locator("header h1")).toHaveText("Ezequiel Cano");
+    await expect(page.locator(".btn-cv")).toHaveAttribute("href", locale.cv);
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", /\S+/);
+    await expect(page.locator('meta[property="og:locale"]')).toHaveCount(1);
+    await expect(page.locator("h1")).toHaveCount(1);
+    await expect(page.locator('link[rel="icon"]')).toHaveAttribute("href", /favicon.*\.svg$/);
+    const canonical = page.locator('link[rel="canonical"]');
+    if (process.env.SITE_URL) {
+      await expect(canonical).toHaveAttribute(
+        "href",
+        `${process.env.SITE_URL.replace(/\/+$/, "")}${locale.path}`,
+      );
+      await expect(page.locator('link[hreflang="es"]')).toHaveCount(1);
+      await expect(page.locator('link[hreflang="en"]')).toHaveCount(1);
+      await expect(page.locator('link[hreflang="x-default"]')).toHaveCount(1);
+      if (locale.lang === "es") {
+        const robots = await page.request.get("/robots.txt");
+        expect(robots.ok()).toBeTruthy();
+        expect(await robots.text()).toContain(`${process.env.SITE_URL}/sitemap.xml`);
+        const sitemap = await page.request.get("/sitemap.xml");
+        expect(sitemap.ok()).toBeTruthy();
+        expect(await sitemap.text()).toContain('hreflang="x-default"');
+        expect(await sitemap.text()).toContain(`${process.env.SITE_URL}/en/`);
+      }
+    } else {
+      await expect(canonical).toHaveCount(0);
+    }
+    await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
+    await page.keyboard.press("Tab");
+    await expect(page.locator(".skip-link")).toBeFocused();
     for (const id of expectedSectionIds) {
       await expect(page.locator(`#${id}`)).toHaveCount(1);
     }
@@ -23,8 +54,26 @@ test("serves equivalent Spanish and English draft pages", async ({ page }) => {
       "aria-hidden",
       "true",
     );
+    const images = await page.locator("main img").evaluateAll((elements) =>
+      elements.map((image) => ({
+        source: image.getAttribute("src"),
+        alt: image.getAttribute("alt"),
+        width: image.getAttribute("width"),
+        height: image.getAttribute("height"),
+        loading: image.getAttribute("loading"),
+      })),
+    );
+    for (const image of images.filter(({ source }) => source?.includes("/images/"))) {
+      expect(image.source).toMatch(/\.webp$/);
+      expect(image.alt).toBeTruthy();
+      expect(image.width).toBeTruthy();
+      expect(image.height).toBeTruthy();
+      expect(image.loading).toBe("lazy");
+    }
     for (const documentPath of [
       "/cv_ezequiel.pdf",
+      "/cv-es.pdf",
+      "/cv-en.pdf",
       "/ingles_certificado.pdf",
       "/freecodecamp.pdf",
       "/coderhause.pdf",
@@ -38,9 +87,42 @@ test("serves equivalent Spanish and English draft pages", async ({ page }) => {
       body: JSON.stringify(accessibility, null, 2),
       contentType: "application/json",
     });
+    await page.locator("#dark-toggle").click();
+    const darkAccessibility = await new AxeBuilder({ page }).analyze();
+    expect(darkAccessibility.violations).toEqual([]);
+    await page.locator("#dark-toggle").click();
   }
 
-  await expect(page.getByText("English translation draft", { exact: false })).toBeVisible();
+  await expect(page.getByText("English translation draft", { exact: false })).toHaveCount(0);
+});
+
+test("keeps internal links valid in Spanish and English", async ({ page }) => {
+  for (const path of ["/", "/en/"]) {
+    await page.goto(path);
+    const links = await page
+      .locator("a[href]")
+      .evaluateAll((anchors) => anchors.map((anchor) => (anchor as HTMLAnchorElement).href));
+
+    for (const href of links) {
+      const url = new URL(href);
+      if (url.origin === new URL(page.url()).origin) {
+        if (url.hash) {
+          const targetId = decodeURIComponent(url.hash.slice(1));
+          expect(
+            await page.evaluate((id) => document.getElementById(id) !== null, targetId),
+            `${path} contains a link to missing target ${url.hash}`,
+          ).toBeTruthy();
+        } else {
+          const response = await page.request.get(`${url.pathname}${url.search}`);
+          expect(response.ok(), `${path} contains a broken internal link: ${href}`).toBeTruthy();
+        }
+      } else {
+        expect(["https:", "mailto:"], `${path} contains an unsupported link: ${href}`).toContain(
+          url.protocol,
+        );
+      }
+    }
+  }
 });
 
 test("shows the supplied skills and keeps the marquee in one row on mobile", async ({ page }) => {
@@ -104,13 +186,73 @@ test("advances one section per small wheel scroll on desktop and mobile", async 
   ]) {
     await page.setViewportSize(viewport);
     await page.goto("/");
-    await expect(page.locator("main")).toHaveCSS("scroll-snap-type", "y mandatory");
+    await expect(page.locator("main")).toHaveCSS("scroll-snap-type", "y");
     await page.mouse.move(Math.floor(viewport.width / 2), Math.floor(viewport.height / 2));
     await page.mouse.wheel(0, 120);
     await expect
       .poll(() => page.locator("main").evaluate((main) => main.scrollTop))
-      .toBeGreaterThan(100);
+      .toBeGreaterThan(0);
     await expect(page.locator("#trabajos")).toBeInViewport();
+    await expect
+      .poll(async () => {
+        const [sectionTop, headerBottom] = await Promise.all([
+          page.locator("#trabajos").evaluate((section) => section.getBoundingClientRect().top),
+          page.locator("header").evaluate((header) => header.getBoundingClientRect().bottom),
+        ]);
+        return Math.abs(sectionTop - headerBottom);
+      })
+      .toBeLessThan(2);
+    const [sectionTop, headerBottom, nextSectionTop] = await Promise.all([
+      page.locator("#trabajos").evaluate((section) => section.getBoundingClientRect().top),
+      page.locator("header").evaluate((header) => header.getBoundingClientRect().bottom),
+      page.locator("#acerca").evaluate((section) => section.getBoundingClientRect().top),
+    ]);
+    expect(Math.abs(sectionTop - headerBottom)).toBeLessThan(2);
+    expect(nextSectionTop).toBeGreaterThanOrEqual(viewport.height - 1);
+    if (viewport.width < 768) {
+      await expect(page.locator("#trabajos")).toHaveCSS("scroll-snap-align", "none");
+    }
+  }
+});
+
+test("scrolls down through long sections to the footer, then back up without URL changes", async ({
+  page,
+}) => {
+  for (const viewport of [
+    { width: 1280, height: 800 },
+    { width: 390, height: 844 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto("/");
+    const sectionColors = await page
+      .locator("main > .seccion")
+      .evaluateAll((sections) =>
+        sections.map((section) => getComputedStyle(section).backgroundColor),
+      );
+    await expect(page.locator("#background-canvas")).toHaveCSS("z-index", "0");
+    await expect(page.locator("main")).toHaveCSS("z-index", "1");
+    expect(sectionColors[0]).not.toBe("rgba(0, 0, 0, 0)");
+    expect(sectionColors[0]).not.toBe(sectionColors[1]);
+    expect(sectionColors.every((color) => color.startsWith("rgba("))).toBe(true);
+    expect(
+      sectionColors.every(
+        (color) => Number.parseFloat(color.slice(color.lastIndexOf(",") + 1)) <= 0.6,
+      ),
+    ).toBe(true);
+    await page.mouse.move(Math.floor(viewport.width / 2), Math.floor(viewport.height / 2));
+    for (let index = 0; index < 12; index += 1) {
+      await page.mouse.wheel(0, 120);
+      await page.waitForTimeout(450);
+    }
+    await expect(page.locator("#contacto")).toBeInViewport();
+    await expect(page).toHaveURL("/");
+
+    for (let index = 0; index < 12; index += 1) {
+      await page.mouse.wheel(0, -120);
+      await page.waitForTimeout(450);
+    }
+    await expect(page.locator("#inicio")).toBeInViewport();
+    await expect(page).toHaveURL("/");
   }
 });
 

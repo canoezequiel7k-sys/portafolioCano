@@ -1,5 +1,6 @@
 import { gsap } from "gsap";
 
+/** Anima las pupilas con seguimiento en escritorio o un movimiento idle en pantallas táctiles. */
 export function initializeEyes(root: Document): () => void {
   const pupils = [...root.querySelectorAll<SVGCircleElement>("#ojo-izq, #ojo-der")];
   if (pupils.length === 0) {
@@ -54,6 +55,7 @@ export function initializeEyes(root: Document): () => void {
       onUpdate: () => pupil.setAttribute("cy", String(origins[index].y + offsets[index].y)),
     }),
   );
+  // Limita el desplazamiento para que cada pupila permanezca dentro de sus lentes.
   const handlePointerMove = (event: PointerEvent): void => {
     if (event.pointerType === "touch") {
       return;
@@ -78,6 +80,7 @@ export function initializeEyes(root: Document): () => void {
       moveY[index]?.(dy * ratio);
     });
   };
+  // Centra las pupilas cuando el puntero sale de la ventana.
   const reset = (): void => {
     moveX.forEach((move) => move(0));
     moveY.forEach((move) => move(0));

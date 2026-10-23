@@ -3,10 +3,12 @@ import { expect, test, type Page } from "@playwright/test";
 
 const netlifyDrawerFrame = 'iframe[title="Netlify Drawer"][src^="https://app.netlify.com/cdp/"]';
 
+// Excluye únicamente el iframe del panel externo de Netlify durante el análisis axe.
 function applicationAccessibility(page: Page): AxeBuilder {
   return new AxeBuilder({ page }).exclude(netlifyDrawerFrame);
 }
 
+// Recorre idiomas, recursos, metadatos, navegación y accesibilidad del sitio.
 test("serves equivalent Spanish and English pages", async ({ page }) => {
   const expectedSectionIds = ["inicio", "trabajos", "acerca", "proyectos"];
 
@@ -102,6 +104,7 @@ test("serves equivalent Spanish and English pages", async ({ page }) => {
   await expect(page.getByText("English translation draft", { exact: false })).toHaveCount(0);
 });
 
+// Verifica que cada enlace interno y recurso apunte a una ruta servida por la aplicación.
 test("keeps internal links valid in Spanish and English", async ({ page }) => {
   for (const path of ["/", "/en/"]) {
     await page.goto(path);
@@ -131,6 +134,7 @@ test("keeps internal links valid in Spanish and English", async ({ page }) => {
   }
 });
 
+// Detecta errores JavaScript al cambiar entre las dos páginas de idioma.
 test("switches language without browser runtime errors", async ({ page }) => {
   const pageErrors: string[] = [];
   page.on("pageerror", (error) => pageErrors.push(error.message));
@@ -140,6 +144,7 @@ test("switches language without browser runtime errors", async ({ page }) => {
   expect(pageErrors).toEqual([]);
 });
 
+// Comprueba las habilidades declaradas y que la marquesina no desborde en móvil.
 test("shows the supplied skills and keeps the marquee in one row on mobile", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
@@ -194,6 +199,7 @@ test("shows the supplied skills and keeps the marquee in one row on mobile", asy
   await expect(page.locator(".skills-text")).toContainText("REST APIs");
 });
 
+// Garantiza que un gesto corto avance exactamente una sección en ambos formatos.
 test("advances one section per small wheel scroll on desktop and mobile", async ({ page }) => {
   for (const viewport of [
     { width: 1280, height: 800 },
@@ -230,6 +236,7 @@ test("advances one section per small wheel scroll on desktop and mobile", async 
   }
 });
 
+// Comprueba el recorrido por secciones largas en ambas direcciones, sin alterar la URL.
 test("scrolls down through long sections to the footer, then back up without URL changes", async ({
   page,
 }) => {
@@ -271,6 +278,7 @@ test("scrolls down through long sections to the footer, then back up without URL
   }
 });
 
+// Valida el menú con teclado y el estado persistente y accesible del tema.
 test("supports keyboard navigation and a persistent accessible theme toggle", async ({ page }) => {
   await page.goto("/");
   const menuItem = page.locator(".menu-item");
@@ -304,6 +312,29 @@ test("supports keyboard navigation and a persistent accessible theme toggle", as
   await expect(page.locator("body")).toHaveClass(/dark-mode/);
 });
 
+// Comprueba el color calculado de lentes y pupilas en ambos temas.
+test("adapts the glasses and eyes color to the selected theme", async ({ page }) => {
+  await page.goto("/");
+  const assertCharacterColor = async (expectedColor: string): Promise<void> => {
+    const [glasses, eyes] = await Promise.all([
+      page.locator(".personaje rect").evaluateAll((elements) =>
+        elements.map((element) => getComputedStyle(element).stroke),
+      ),
+      page.locator(".personaje circle").evaluateAll((elements) =>
+        elements.map((element) => getComputedStyle(element).fill),
+      ),
+    ]);
+    expect(glasses).toEqual([expectedColor, expectedColor]);
+    expect(eyes).toEqual([expectedColor, expectedColor]);
+  };
+
+  await assertCharacterColor("rgb(17, 17, 17)");
+
+  await page.locator("#dark-toggle").click();
+  await assertCharacterColor("rgb(245, 245, 245)");
+});
+
+// Conserva sección y tema al navegar entre idiomas y evita repetir la introducción.
 test("preserves section and theme across language changes without replaying the intro", async ({
   page,
 }) => {
@@ -332,6 +363,7 @@ test("preserves section and theme across language changes without replaying the 
   expect(pageErrors).toEqual([]);
 });
 
+// Respeta la preferencia de movimiento reducido en animaciones y desplazamiento.
 test("respects reduced motion for the typewriter, marquee, and section scroll", async ({
   page,
 }) => {
@@ -353,6 +385,7 @@ test("respects reduced motion for the typewriter, marquee, and section scroll", 
     .toBeGreaterThan(0);
 });
 
+// Comprueba la resolución del canvas en pantallas de alta densidad y al redimensionar.
 test("scales the canvas to device pixels and adapts on resize", async ({
   browser,
   page: basePage,
@@ -387,6 +420,7 @@ test("scales the canvas to device pixels and adapts on resize", async ({
   await context.close();
 });
 
+// Verifica el seguimiento limitado del puntero y el movimiento idle táctil de los ojos.
 test("uses bounded pointer tracking on desktop and idle motion on touch", async ({
   browser,
   page: basePage,
@@ -451,6 +485,7 @@ test("uses bounded pointer tracking on desktop and idle motion on touch", async 
   await touchContext.close();
 });
 
+// Recorre rutas e idiomas en viewports conocidos y comprueba que no haya desbordes.
 test("switches between locale routes and stays within the requested viewports", async ({
   page,
 }) => {

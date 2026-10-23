@@ -1,7 +1,9 @@
+/* Tokens visuales compartidos por el tema claro y los componentes. */
 :root {
   color-scheme: light;
   --color-page: #f5f5f5;
   --color-text: #222222;
+  --color-character: #111111;
   --color-surface: rgba(255, 255, 255, 0.9);
   --color-accent: #526b78;
   --color-accent-hover: #455a64;
@@ -15,15 +17,18 @@
   --duration-normal: 300ms;
 }
 
+/* Sustituye los colores semánticos al activar el tema oscuro. */
 body.dark-mode {
   color-scheme: dark;
   --color-page: #121212;
   --color-text: #f5f5f5;
+  --color-character: #f5f5f5;
   --color-surface: rgba(30, 30, 30, 0.9);
   --color-accent: #90caf9;
   --color-accent-hover: #64b5f6;
 }
 
+/* Aviso flotante de estado que aparece al cambiar de idioma. */
 .translation-notice {
   position: fixed;
   right: 1rem;

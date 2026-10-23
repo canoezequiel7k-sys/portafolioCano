@@ -1,3 +1,4 @@
+/** Estado de una partícula del fondo, en coordenadas CSS del canvas. */
 interface Particle {
   x: number;
   y: number;
@@ -9,6 +10,7 @@ interface Particle {
 const PARTICLE_COUNT = 180;
 const POINTER_RADIUS = 100;
 
+/** Dibuja el fondo animado, adaptándolo a tema, tamaño, puntero y preferencias de movimiento. */
 export function initializeCanvas(root: Document): () => void {
   const canvas = root.querySelector<HTMLCanvasElement>("#background-canvas");
   const context = canvas?.getContext("2d");
@@ -27,6 +29,7 @@ export function initializeCanvas(root: Document): () => void {
   let color = "";
   const reducedMotion = view.matchMedia("(prefers-reduced-motion: reduce)");
 
+  // Lee el color definido por el tema; si falta, informa el error y evita dibujar con un valor falso.
   const readColor = (): boolean => {
     const nextColor = view.getComputedStyle(root.body).getPropertyValue("--particle-color").trim();
     if (!nextColor) {
@@ -37,6 +40,7 @@ export function initializeCanvas(root: Document): () => void {
     return true;
   };
 
+  // Limpia y pinta las partículas; solo actualiza posición cuando la animación está activa.
   const draw = (animate: boolean): void => {
     context.clearRect(0, 0, width, height);
     context.fillStyle = color;
@@ -82,12 +86,14 @@ export function initializeCanvas(root: Document): () => void {
     }
   };
 
+  // Cancela el siguiente cuadro solicitado para liberar trabajo cuando no se anima.
   const stop = (): void => {
     if (frame !== 0) {
       view.cancelAnimationFrame(frame);
       frame = 0;
     }
   };
+  // Actualiza una vez por cuadro mientras la página sea visible y permita movimiento.
   const animate = (): void => {
     if (view.document.visibilityState !== "visible" || reducedMotion.matches) {
       frame = 0;
@@ -96,11 +102,13 @@ export function initializeCanvas(root: Document): () => void {
     draw(true);
     frame = view.requestAnimationFrame(animate);
   };
+  // Inicia un solo ciclo de cuadros cuando las condiciones de visibilidad lo permiten.
   const start = (): void => {
     if (frame === 0 && view.document.visibilityState === "visible" && !reducedMotion.matches) {
       frame = view.requestAnimationFrame(animate);
     }
   };
+  // Ajusta la resolución del canvas y conserva la distribución al cambiar el viewport.
   const resize = (): void => {
     const bounds = canvas.getBoundingClientRect();
     const nextWidth = Math.max(1, bounds.width);
@@ -134,12 +142,15 @@ export function initializeCanvas(root: Document): () => void {
     }
     start();
   };
+  // Guarda la posición actual del puntero para repeler partículas cercanas.
   const handlePointerMove = (event: PointerEvent): void => {
     pointer = { x: event.clientX, y: event.clientY };
   };
+  // Desactiva la interacción de repulsión al salir el puntero de la ventana.
   const clearPointer = (): void => {
     pointer = null;
   };
+  // Detiene el bucle en segundo plano y lo reanuda al volver a la pestaña.
   const handleVisibilityChange = (): void => {
     if (view.document.visibilityState === "visible") {
       start();
@@ -147,6 +158,7 @@ export function initializeCanvas(root: Document): () => void {
       stop();
     }
   };
+  // Respeta los cambios de preferencia de movimiento mientras la página sigue abierta.
   const handleMotionChange = (): void => {
     if (reducedMotion.matches) {
       stop();
@@ -155,6 +167,7 @@ export function initializeCanvas(root: Document): () => void {
       start();
     }
   };
+  // Redibuja las partículas con el color actualizado al cambiar la clase del tema.
   const themeObserver = new MutationObserver(() => {
     if (readColor()) {
       draw(false);

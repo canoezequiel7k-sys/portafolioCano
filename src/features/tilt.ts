@@ -1,5 +1,6 @@
 import { gsap } from "gsap";
 
+/** Inclina las tarjetas informativas según el puntero, solo en dispositivos compatibles. */
 export function initializeTilt(root: Document): () => void {
   const view = root.defaultView;
   const cards = [
@@ -15,6 +16,7 @@ export function initializeTilt(root: Document): () => void {
     return () => {};
   }
 
+  // Vincula el ángulo con la posición del puntero dentro de cada tarjeta.
   const cleanups = cards.map(({ element, intensity }) => {
     const rotateX = gsap.quickTo(element, "rotationX", { duration: 0.25, ease: "power2.out" });
     const rotateY = gsap.quickTo(element, "rotationY", { duration: 0.25, ease: "power2.out" });
@@ -31,6 +33,7 @@ export function initializeTilt(root: Document): () => void {
       rotateX((y - 0.5) * 2 * intensity);
       rotateY((0.5 - x) * 2 * intensity);
     };
+    // Devuelve la tarjeta a su posición neutra cuando el puntero sale.
     const reset = (): void => {
       rotateX(0);
       rotateY(0);

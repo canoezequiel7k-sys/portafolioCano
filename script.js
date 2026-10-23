@@ -1,3 +1,4 @@
+// Entrada legacy; la aplicación Vite activa inicializa sus funciones desde src/main.ts.
 document.addEventListener("DOMContentLoaded", function() {
 
   const menuItem = document.querySelector(".menu-item");
@@ -8,9 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const projects = document.querySelectorAll(".proyecto");
   const contratameBtn = document.querySelector(".contratame");
 
-  // ============================
-  // MENÚ LATERAL
-  // ============================
+  // Abre y cierra la navegación lateral, y desplaza a la sección elegida.
   menuLink.addEventListener("click", function(e) {
     e.preventDefault();
     menuItem.classList.toggle("active");
@@ -32,9 +31,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
 
-  // ============================
-  // ANIMACIONES AL HACER SCROLL
-  // ============================
+  // Marca como visibles las secciones y revela sus tarjetas al pasar por pantalla.
   function handleScroll() {
     const scrollMiddle = window.innerHeight / 2;
 
@@ -57,9 +54,7 @@ document.addEventListener("DOMContentLoaded", function() {
   main.addEventListener("scroll", handleScroll);
   handleScroll();
 
-  // ============================
-  // FONDO ANIMADO CON CANVAS
-  // ============================
+  // Dibuja partículas en movimiento y reacciona al puntero.
   const canvas = document.getElementById("background-canvas");
   const ctx = canvas.getContext("2d");
   let particlesArray = [];
@@ -79,6 +74,7 @@ document.addEventListener("DOMContentLoaded", function() {
     mouse.y = e.y;
   });
 
+  // Representa y actualiza una partícula individual del fondo animado.
   class Particle {
     constructor(x, y, size, speedX, speedY) {
       this.x = x;
@@ -114,6 +110,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
+  // Crea una nueva distribución de partículas para las dimensiones del canvas.
   function initParticles() {
     particlesArray = [];
     const numParticles = 180;
@@ -127,6 +124,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
+  // Limpia y vuelve a dibujar el canvas en cada fotograma.
   function animateParticles() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     particlesArray.forEach(p => p.update());
@@ -136,12 +134,11 @@ document.addEventListener("DOMContentLoaded", function() {
   initParticles();
   animateParticles();
 
-  // ============================
-  // OJOS DEL PERSONAJE SIGUEN AL MOUSE
-  // ============================
+  // Sigue el puntero con las pupilas del personaje.
   const ojoIzq = document.getElementById("ojo-izq");
   const ojoDer = document.getElementById("ojo-der");
 
+  // Calcula la dirección de cada pupila manteniendo el movimiento dentro de los lentes.
   function moverOjos(e) {
     const rectIzq = ojoIzq.getBoundingClientRect();
     const rectDer = ojoDer.getBoundingClientRect();
@@ -165,12 +162,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
   window.addEventListener("mousemove", moverOjos);
 
-  // ============================
-  // EFECTO INTERACTIVO EN ABOUT Y CERTIFICACIONES
-  // ============================
+  // Añade una inclinación 3D a la tarjeta de perfil y a los certificados.
   const aboutCard = document.querySelector(".about-card");
   const certCard = document.querySelector(".certificaciones-container");
 
+  // Inclina una tarjeta según la posición del puntero y la devuelve al salir.
   function addTiltEffect(card, intensity = 12) {
   if (!card) return;
   card.addEventListener("mousemove", (e) => {
@@ -197,9 +193,7 @@ addTiltEffect(aboutCard, 8);
 addTiltEffect(certCard, 12); // 💡 un poco más inclinado
 
 
-// ============================
-// DARK MODE TOGGLE
-// ============================
+// Alterna el tema, guarda la preferencia y anima el icono del botón.
 const darkToggle = document.getElementById("dark-toggle");
 darkToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark-mode");
@@ -223,9 +217,7 @@ if (localStorage.getItem("theme") === "dark") {
   document.body.classList.add("dark-mode");
 }
 
-// ============================
-// Cambiar ícono del botón 🌙/☀️
-// ============================
+// Sincroniza el icono del control con el tema aplicado.
 function updateToggleIcon() {
   if (document.body.classList.contains("dark-mode")) {
     darkToggle.textContent = "🌙"; // en oscuro → mostrar sol (volver a claro)
@@ -242,13 +234,12 @@ darkToggle.addEventListener("click", () => {
   updateToggleIcon();
 });
 
-// ============================
-// TYPEWRITER EFFECT
-// ============================
+// Prepara el texto de introducción para escribirlo progresivamente.
 const typewriterText = document.getElementById("typewriter-text");
 const text = typewriterText.dataset.text || "Hola! soy Ezequiel...";
 let i = 0;
 
+// Añade un carácter por intervalo y oculta el cursor al completar la frase.
 function typeWriter() {
   if (i < text.length) {
     typewriterText.textContent += text.charAt(i);

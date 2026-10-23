@@ -1,5 +1,6 @@
 import { writePreference, writeSessionFlag } from "./storage.ts";
 
+/** Conserva la sección actual y registra el idioma preferido antes de navegar. */
 export function initializeLanguage(root: Document): () => void {
   const main = root.querySelector<HTMLElement>("main");
   const link = root.querySelector<HTMLAnchorElement>(".language-switch");
@@ -8,6 +9,7 @@ export function initializeLanguage(root: Document): () => void {
     return () => {};
   }
 
+  // Deja intactos los clics modificados que el navegador usa para abrir otra pestaña o ventana.
   const handleClick = (event: MouseEvent): void => {
     if (
       event.defaultPrevented ||
@@ -24,6 +26,7 @@ export function initializeLanguage(root: Document): () => void {
     const center = mainBounds.top + mainBounds.height / 2;
     const sections = [...main.querySelectorAll<HTMLElement>(".seccion")];
     const hashSection = sections.find((section) => section.id === root.location.hash.slice(1));
+    // Si no hay un ancla explícita, elige la sección más cercana al centro visible.
     const currentSection =
       hashSection ??
       sections.reduce<HTMLElement | null>((nearest, section) => {

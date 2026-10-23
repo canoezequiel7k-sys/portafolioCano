@@ -1,3 +1,4 @@
+/** Avanza por secciones con la rueda y conserva el desplazamiento libre en secciones largas. */
 export function initializeSectionScroll(root: Document): () => void {
   const main = root.querySelector<HTMLElement>("main");
   const view = root.defaultView;
@@ -12,6 +13,7 @@ export function initializeSectionScroll(root: Document): () => void {
   const sections = [
     ...main.querySelectorAll<HTMLElement>(":scope > .seccion, :scope > .footer-seccion"),
   ];
+  // Desactiva el ajuste por pantalla en secciones cuyo contenido supera el área visible.
   const updateSnapAlignment = (): void => {
     const paddingTop = Number.parseFloat(view.getComputedStyle(main).paddingTop) || 0;
     const availableHeight = main.clientHeight - paddingTop;
@@ -23,6 +25,7 @@ export function initializeSectionScroll(root: Document): () => void {
   updateSnapAlignment();
   view.addEventListener("resize", updateSnapAlignment);
 
+  // Libera la navegación cuando termina el desplazamiento o vence el tiempo de seguridad.
   const unlock = (): void => {
     isScrollingToSection = false;
     if (unlockTimer !== null) {
@@ -31,6 +34,7 @@ export function initializeSectionScroll(root: Document): () => void {
     }
   };
 
+  // Identifica la sección alineada con el inicio visible del contenedor principal.
   const getCurrentSection = (): {
     section: HTMLElement;
     bounds: DOMRect;
@@ -59,6 +63,7 @@ export function initializeSectionScroll(root: Document): () => void {
     };
   };
 
+  // Deja recorrer el contenido de una sección alta antes de pasar a la siguiente.
   const canContinueWithinSection = (
     direction: number,
     bounds: DOMRect,
@@ -71,6 +76,7 @@ export function initializeSectionScroll(root: Document): () => void {
       : bounds.height > viewportHeight && bounds.top < viewportTop - 1;
   };
 
+  // Desplaza suavemente al inicio de la sección vecina sin modificar la URL.
   const navigate = (direction: number, currentSection: HTMLElement): boolean => {
     const currentIndex = sections.indexOf(currentSection);
     const nextSection = sections[currentIndex + direction];
@@ -90,6 +96,7 @@ export function initializeSectionScroll(root: Document): () => void {
     return true;
   };
 
+  // Interpreta la rueda sin interferir con zoom, movimiento reducido ni contenido largo.
   const handleWheel = (event: WheelEvent): void => {
     if (reducedMotion.matches || event.ctrlKey || event.deltaY === 0) {
       return;

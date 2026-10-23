@@ -2,6 +2,7 @@ import { profile } from "../content/profile.ts";
 import { ui } from "../content/ui.ts";
 import type { Locale, Localized } from "../types/content.ts";
 
+/** Escapa caracteres reservados antes de insertar texto dentro del HTML generado. */
 export function escapeHtml(value: string): string {
   return value.replace(/[&<>"']/g, (character) => {
     const entities: Readonly<Record<string, string>> = {
@@ -15,10 +16,12 @@ export function escapeHtml(value: string): string {
   });
 }
 
+/** Selecciona y protege el texto correspondiente al idioma actual. */
 function text(value: Localized, locale: Locale): string {
   return escapeHtml(value[locale]);
 }
 
+/** Construye el documento de una página con contenido, navegación y metadatos localizados. */
 export function renderPage(locale: Locale): string {
   const copy = ui[locale];
   const intro = profile.introduction;
@@ -124,13 +127,14 @@ export function renderPage(locale: Locale): string {
     <main>
       <section id="inicio" class="seccion inicio" tabindex="-1">
         <div class="contenido-centrado">
+          <!-- currentColor toma el tono de --color-character para contrastar en ambos temas. -->
           <div class="personaje" aria-hidden="true">
             <svg width="120" height="60" viewBox="0 0 200 100">
-              <rect x="10" y="20" width="70" height="50" rx="15" ry="15" stroke="#000" stroke-width="4" fill="transparent"/>
-              <rect x="120" y="20" width="70" height="50" rx="15" ry="15" stroke="#000" stroke-width="4" fill="transparent"/>
-              <line x1="80" y1="45" x2="120" y2="45" stroke="#000" stroke-width="4"/>
-              <circle id="ojo-izq" cx="45" cy="45" r="10" fill="#000"/>
-              <circle id="ojo-der" cx="155" cy="45" r="10" fill="#000"/>
+              <rect x="10" y="20" width="70" height="50" rx="15" ry="15" stroke="currentColor" stroke-width="4" fill="transparent"/>
+              <rect x="120" y="20" width="70" height="50" rx="15" ry="15" stroke="currentColor" stroke-width="4" fill="transparent"/>
+              <line x1="80" y1="45" x2="120" y2="45" stroke="currentColor" stroke-width="4"/>
+              <circle id="ojo-izq" cx="45" cy="45" r="10" fill="currentColor"/>
+              <circle id="ojo-der" cx="155" cy="45" r="10" fill="currentColor"/>
             </svg>
           </div>
           <h2 class="typewriter" id="typewriter-text" data-text="${text(intro, locale)}" aria-label="${text(intro, locale)}" aria-live="off"></h2>

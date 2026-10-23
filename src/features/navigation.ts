@@ -1,3 +1,4 @@
+/** Controla apertura, accesibilidad por teclado y cierre del menú lateral. */
 export function initializeNavigation(root: Document): () => void {
   const menu = root.querySelector<HTMLElement>(".menu-item");
   const toggle = root.querySelector<HTMLButtonElement>(".menu-toggle");
@@ -9,6 +10,7 @@ export function initializeNavigation(root: Document): () => void {
   }
 
   const links = [...panel.querySelectorAll<HTMLAnchorElement>("a")];
+  // Sincroniza la visibilidad, el foco y los atributos accesibles del panel.
   const setOpen = (open: boolean, restoreFocus = false): void => {
     menu.classList.toggle("active", open);
     toggle.setAttribute("aria-expanded", String(open));
@@ -26,10 +28,12 @@ export function initializeNavigation(root: Document): () => void {
     }
   };
 
+  /** Abre el menú y habilita sus enlaces para teclado y tecnologías de asistencia. */
   const openMenu = (): void => {
     setOpen(true);
   };
 
+  // Alterna el estado del menú con su botón principal.
   const handleToggle = (): void => {
     if (toggle.getAttribute("aria-expanded") === "true") {
       setOpen(false);
@@ -37,6 +41,7 @@ export function initializeNavigation(root: Document): () => void {
       openMenu();
     }
   };
+  // Cierra el panel cuando el clic ocurre fuera de él.
   const handleDocumentClick = (event: MouseEvent): void => {
     if (
       menu.classList.contains("active") &&
@@ -46,12 +51,14 @@ export function initializeNavigation(root: Document): () => void {
       setOpen(false);
     }
   };
+  // Permite cerrar el menú con Escape y devuelve el foco al botón.
   const handleKeydown = (event: KeyboardEvent): void => {
     if (event.key === "Escape" && menu.classList.contains("active")) {
       event.preventDefault();
       setOpen(false, true);
     }
   };
+  // Cierra el panel tras elegir un ancla y enfoca la sección de destino.
   const handleNavigation = (event: MouseEvent): void => {
     if (event.target instanceof Element) {
       const anchor = event.target.closest<HTMLAnchorElement>('a[href^="#"]');

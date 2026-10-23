@@ -20,6 +20,7 @@ const documents = new Set([
 const configuredSiteUrl = (process.env.SITE_URL ?? process.env.URL)?.trim();
 const siteUrl = configuredSiteUrl ? new URL(configuredSiteUrl) : null;
 
+// Solo acepta el origen HTTPS público; evita generar enlaces canónicos inválidos.
 if (
   siteUrl &&
   (siteUrl.protocol !== "https:" || siteUrl.pathname !== "/" || siteUrl.search || siteUrl.hash)
@@ -27,7 +28,7 @@ if (
   throw new Error("SITE_URL must be the HTTPS origin of the public site, without a path.");
 }
 
-// Browsers percent-encode "+" in URLs, which the static preview server does not resolve.
+// El servidor estático no resuelve el "+" codificado en los nombres de algunos iconos.
 const assetAliases = new Map([["assets/icons/cpp.svg", "assets/icons/c++.svg"]]);
 const mimeTypes: Readonly<Record<string, string>> = {
   ".jpg": "image/jpeg",
@@ -35,6 +36,7 @@ const mimeTypes: Readonly<Record<string, string>> = {
   ".png": "image/png",
   ".svg": "image/svg+xml",
 };
+// Redirige a la preferencia guardada antes del render, excepto a los rastreadores.
 const localeBootstrap = `<script>
   (() => {
     try {
@@ -48,6 +50,7 @@ const localeBootstrap = `<script>
     }
   })();
 </script>`;
+// Aplica el tema guardado antes de mostrar la página para evitar un destello visual.
 const themeBootstrap = `<script>
   try {
     if (localStorage.getItem("theme") === "dark") {
@@ -58,6 +61,7 @@ const themeBootstrap = `<script>
   }
 </script>`;
 
+/** Genera metadatos sociales y SEO para una página del idioma indicado. */
 function seoMetadata(locale: "es" | "en"): string {
   const description = profile.summary[locale];
   const currentPath = locale === "es" ? "/" : "/en/";
@@ -89,6 +93,7 @@ function seoMetadata(locale: "es" | "en"): string {
   return `<!--seo-meta-start-->\n${tags.join("\n")}\n<!--seo-meta-end-->`;
 }
 
+/** Crea el sitemap bilingüe cuando está configurado el origen público del sitio. */
 function sitemap(): string {
   if (!siteUrl) {
     return "";
@@ -113,10 +118,12 @@ function sitemap(): string {
 </urlset>`;
 }
 
+/** Publica robots.txt y añade la URL del sitemap solo si existe un origen válido. */
 function robotsTxt(): string {
   return `User-agent: *\nAllow: /\n${siteUrl ? `Sitemap: ${new URL("/sitemap.xml", siteUrl).href}\n` : ""}`;
 }
 
+/** Enumera recursivamente los recursos que deben copiarse al build. */
 async function listFiles(directory: string): Promise<string[]> {
   const entries = await readdir(directory, { withFileTypes: true });
   const nested = await Promise.all(
@@ -128,6 +135,7 @@ async function listFiles(directory: string): Promise<string[]> {
   return nested.flat();
 }
 
+/** Prerenderiza ambos idiomas y sirve los metadatos dinámicos durante el desarrollo. */
 function localizedPages(): Plugin {
   return {
     name: "localized-prerender",
@@ -215,6 +223,7 @@ function localizedPages(): Plugin {
   };
 }
 
+/** Expone los recursos existentes en dev y los copia al directorio final del build. */
 function existingAssets(): Plugin {
   return {
     name: "copy-existing-public-assets",

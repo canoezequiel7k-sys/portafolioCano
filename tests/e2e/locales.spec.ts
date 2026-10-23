@@ -1,5 +1,11 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
+
+const netlifyDrawerFrame = 'iframe[title="Netlify Drawer"][src^="https://app.netlify.com/cdp/"]';
+
+function applicationAccessibility(page: Page): AxeBuilder {
+  return new AxeBuilder({ page }).exclude(netlifyDrawerFrame);
+}
 
 test("serves equivalent Spanish and English pages", async ({ page }) => {
   const expectedSectionIds = ["inicio", "trabajos", "acerca", "proyectos"];
@@ -81,14 +87,14 @@ test("serves equivalent Spanish and English pages", async ({ page }) => {
       const response = await page.request.get(documentPath);
       expect(response.ok(), `${documentPath} should be served`).toBeTruthy();
     }
-    const accessibility = await new AxeBuilder({ page }).analyze();
+    const accessibility = await applicationAccessibility(page).analyze();
     expect(accessibility.violations).toEqual([]);
     await test.info().attach(`axe-${locale.lang}.json`, {
       body: JSON.stringify(accessibility, null, 2),
       contentType: "application/json",
     });
     await page.locator("#dark-toggle").click();
-    const darkAccessibility = await new AxeBuilder({ page }).analyze();
+    const darkAccessibility = await applicationAccessibility(page).analyze();
     expect(darkAccessibility.violations).toEqual([]);
     await page.locator("#dark-toggle").click();
   }

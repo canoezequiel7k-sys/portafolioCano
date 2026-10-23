@@ -24,7 +24,7 @@ El renderer comparte IDs y estructura de secciones entre ambos locales. Los recu
 
 ## Calidad y ciclo de vida
 
-ESLint, Prettier, `tsc --noEmit`, dependency-cruiser, Vitest y Playwright + axe tienen comandos separados. Playwright prueba tanto Vite dev como el build servido por `vite preview`. El canvas pausa en segundo plano, escala por `devicePixelRatio` y mantiene sus partículas al redimensionar. Las animaciones respetan `prefers-reduced-motion`; View Transitions son mejora progresiva con navegación/cambio CSS de respaldo.
+ESLint, Prettier, `tsc --noEmit`, dependency-cruiser, Vitest y Playwright + axe tienen comandos separados. Playwright prueba tanto Vite dev como el build servido por `vite preview`. El canvas pausa en segundo plano, escala por `devicePixelRatio` y mantiene sus partículas al redimensionar. Las animaciones respetan `prefers-reduced-motion`; el cambio de tema usa View Transitions con fallback normal y el cambio de idioma usa navegación nativa para evitar errores de transición entre documentos.
 
 Las pruebas E2E comprueban ambos idiomas, metadatos y rutas, imágenes con dimensiones/alt/carga diferida, los ocho viewports, accesibilidad axe en temas claro y oscuro, skip-link, navegación por teclado, persistencia de tema/idioma, cambio de idioma conservando sección, typewriter, marquee, puntero y táctil, reduced motion y dimensiones del canvas.
 

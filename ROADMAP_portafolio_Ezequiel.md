@@ -244,9 +244,9 @@ Documento operativo. La especificación completa (reglas, criterios de aceptaci�
 
 - [x] **(M)** Regresión completa y comprobación de enlaces internos, en ES y EN (Playwright; enlaces externos validados por esquema, no por disponibilidad)
 - [x] **(M)** `netlify.toml`: build, publicación de `dist` y cabeceras HTTP básicas
-- [x] **(S)** Redirección 301 de `/cv_ezequiel.pdf` a `/cv-es.pdf`; certificados mantienen sus rutas. Validar el estado HTTP en deploy preview pendiente.
-- [ ] **(M)** Deploy preview de `modernization`: comprobar rutas, recursos, PDFs y metadatos **en la versión desplegada**
-- [ ] **(S)** Verificar que el selector de idioma y el tema funcionan en la versión desplegada
+- [x] **(S)** Redirección 301 verificada en Netlify: `/cv_ezequiel.pdf` → `/cv-es.pdf`; certificados mantienen sus rutas.
+- [x] **(M)** Deploy preview verificado: `/`, `/en/`, CVs, certificados, robots, sitemap y metadatos. Preview observada: `deploy-preview-6--portafolio-cano.netlify.app`.
+- [ ] **(S)** Verificar selector de idioma y tema sin errores en preview del último commit (E2E local pasa; Netlify aún sirve assets anteriores)
 
 ### A2 — Contenido + documentación
 
@@ -255,7 +255,7 @@ Documento operativo. La especificación completa (reglas, criterios de aceptaci�
 
 ### Gate G5 — Release
 
-**Estado:** preparación local validada parcialmente; no es un release. El contenido inglés fue aprobado. La preview compartida aún sirve un build anterior: actualizarla y verificar rutas, metadatos, PDFs y redirecciones tras el siguiente push. No hacer merge, tag ni publicar sin autorización explícita de Ezequiel.
+**Estado:** deploy preview y sitio estable verificados en lectura; no se publicó desde esta sesión. El contenido inglés fue aprobado. El arreglo de navegación está en el último commit y pasa E2E local, pero Netlify no generó un deploy nuevo (la preview y el sitio estable aún sirven el bundle anterior; branch deploy de esta rama devuelve 404). Falta crear/actualizar el deploy preview y repetir la prueba. No hacer merge ni tag sin autorización explícita de Ezequiel.
 
 - [ ] Todos los criterios globales del plan (sección 18) cumplidos
 - [ ] **E** autoriza explícitamente el release

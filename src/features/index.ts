@@ -1,4 +1,5 @@
 import { initializeCanvas } from "./canvas.ts";
+import { initializeBlink } from "./blink.ts";
 import { initializeEyes } from "./eyes.ts";
 import { initializeLanguage } from "./language.ts";
 import { initializeNavigation } from "./navigation.ts";
@@ -18,6 +19,7 @@ export function initializeInteractions(root: Document): () => void {
     initializeSectionScroll(root),
     initializeCanvas(root),
     initializeEyes(root),
+    initializeBlink(root),
     initializeTilt(root),
     initializeTypewriter(root),
   ];

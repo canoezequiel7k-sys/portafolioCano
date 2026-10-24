@@ -2,7 +2,7 @@
 
 Documento operativo. La especificación completa (reglas, criterios de aceptación, riesgos) está en `Plan_modernizacion_portafolio_Ezequiel_v3.md`; si hay diferencias, manda el plan.
 
-**Última actualización:** 22/10/2026
+**Última actualización:** 24/10/2026
 
 ## Cómo usar este documento
 
@@ -184,6 +184,7 @@ Documento operativo. La especificación completa (reglas, criterios de aceptaci�
 - [ ] **(M)** Reveal con `IntersectionObserver` y stagger de 150 ms (conserva el comportamiento original)
 - [ ] **(L)** Canvas optimizado: 180 partículas, color por tema leído una sola vez, `devicePixelRatio`, pausa en pestaña oculta, sin `NaN`, resize sin reiniciar todo
 - [ ] **(M)** Ojos (6 unidades SVG) con la alternativa táctil elegida
+- [x] **(S)** Parpadeo ocasional de las pupilas: reducido, pausado en pestaña oculta y con limpieza HMR
 - [ ] **(M)** Tilt (intensidad 8 y 12) con alternativa para táctiles
 - [ ] **(S)** Typewriter a 120 ms por carácter, en ambos idiomas
 - [ ] **(M)** Marquee infinito de 25 s en CSS, sin saltos ni espacios vacíos, con duplicados ocultos a lectores de pantalla

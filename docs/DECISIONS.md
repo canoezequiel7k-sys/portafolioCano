@@ -39,16 +39,17 @@
 
 Cada propiedad animada tiene un único propietario salvo coordinación documentada:
 
-| Elemento                     | Propietario actual          | Propuesta objetivo                                    | Fase |
-| ---------------------------- | --------------------------- | ----------------------------------------------------- | ---- |
-| Menú                         | CSS + feature de navegación | CSS + feature de navegación; transiciones simples CSS | 3    |
-| Reveal de secciones/tarjetas | IntersectionObserver + GSAP | IntersectionObserver + GSAP stagger                   | 3    |
-| Ojos                         | Feature GSAP                | Seguimiento limitado; idle táctil GSAP                | 3    |
-| Tilt                         | Feature GSAP                | Una feature, GSAP quickTo                             | 3    |
-| Typewriter                   | Feature TypeScript          | Feature aislada, con reduced motion                   | 3    |
-| Marquee                      | CSS                         | CSS                                                   | 3    |
-| Tema                         | Feature + View Transitions  | View Transitions con alternativa CSS                  | 3    |
-| Idioma                       | Enlace HTML + feature       | Navegación nativa                                     | 3    |
-| Partículas                   | Feature canvas con rAF      | rAF propio, pausado en segundo plano                  | 3    |
+| Elemento                     | Propietario actual          | Propuesta objetivo                                               | Fase |
+| ---------------------------- | --------------------------- | ---------------------------------------------------------------- | ---- |
+| Menú                         | CSS + feature de navegación | CSS + feature de navegación; transiciones simples CSS            | 3    |
+| Reveal de secciones/tarjetas | IntersectionObserver + GSAP | IntersectionObserver + GSAP stagger                              | 3    |
+| Pupilas (`cx`/`cy`)          | Feature de ojos (GSAP)      | Seguimiento limitado; idle táctil GSAP                           | 3    |
+| Pupilas (`scaleY`)           | Feature de parpadeo (GSAP)  | Escala vertical centrada; pausa por visibilidad y reduced motion | 3    |
+| Tilt                         | Feature GSAP                | Una feature, GSAP quickTo                                        | 3    |
+| Typewriter                   | Feature TypeScript          | Feature aislada, con reduced motion                              | 3    |
+| Marquee                      | CSS                         | CSS                                                              | 3    |
+| Tema                         | Feature + View Transitions  | View Transitions con alternativa CSS                             | 3    |
+| Idioma                       | Enlace HTML + feature       | Navegación nativa                                                | 3    |
+| Partículas                   | Feature canvas con rAF      | rAF propio, pausado en segundo plano                             | 3    |
 
 Las rutas Vite ya no cargan `script.js`: las interacciones migradas se inicializan desde `src/features/index.ts` y devuelven limpieza para HMR. El archivo y el HTML legacy de la raíz se conservan juntos para no dejar rota esa entrada independiente.

@@ -394,6 +394,204 @@ test("adapts the glasses and eyes color to the selected theme", async ({ page })
   }
 });
 
+test("blinks both pupils around their moving centers", async ({ page }) => {
+  const pageErrors: string[] = [];
+  page.on("pageerror", (error) => pageErrors.push(error.message));
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  // Fuerza el intervalo mínimo solo en esta prueba; no cambia el comportamiento en producción.
+  await page.addInitScript(() => {
+    Math.random = () => 0;
+  });
+  await page.goto("/");
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.evaluate(() => {
+    Object.defineProperty(document, "visibilityState", { configurable: true, value: "hidden" });
+    document.dispatchEvent(new Event("visibilitychange"));
+  });
+  const hiddenTransformChanges = await page.evaluate(
+    () =>
+      new Promise<number>((resolve) => {
+        const svg = document.querySelector(".personaje svg");
+        let changes = 0;
+        const observer = new MutationObserver((mutations) => {
+          changes += mutations.length;
+        });
+        observer.observe(svg!, {
+          attributes: true,
+          attributeFilter: ["transform"],
+          subtree: true,
+        });
+        window.setTimeout(() => {
+          observer.disconnect();
+          resolve(changes);
+        }, 5_200);
+      }),
+  );
+  expect(hiddenTransformChanges).toBe(0);
+  await page.evaluate(() => {
+    Object.defineProperty(document, "visibilityState", { configurable: true, value: "visible" });
+    document.dispatchEvent(new Event("visibilitychange"));
+  });
+  const blinkState = page.evaluate(
+    () =>
+      new Promise<{ detected: boolean; centered: boolean }>((resolve) => {
+        const pupils = [...document.querySelectorAll<SVGCircleElement>("#ojo-izq, #ojo-der")];
+        const centers = pupils.map((pupil) => ({
+          cx: pupil.cx.baseVal.value,
+          cy: pupil.cy.baseVal.value,
+        }));
+        let offset = -2;
+        const coordinateTimer = window.setInterval(() => {
+          offset = offset === -2 ? 2 : -2;
+          pupils.forEach((pupil, index) => {
+            pupil.setAttribute("cx", String(centers[index].cx + offset));
+            pupil.setAttribute("cy", String(centers[index].cy - offset));
+          });
+        }, 25);
+        const observer = new MutationObserver(() => {
+          const narrow = pupils.every((pupil) => {
+            const transform = pupil.getAttribute("transform") ?? "";
+            const scale = transform.match(/scale\(1 ([\d.e+-]+)\)/);
+            return scale !== null && Number(scale[1]) < 0.2;
+          });
+          if (narrow) {
+            const centered = pupils.every((pupil) => {
+              const transform = pupil.getAttribute("transform") ?? "";
+              const scale = transform.match(/scale\(1 ([\d.e+-]+)\)/);
+              if (!scale) {
+                return false;
+              }
+              const cx = pupil.cx.baseVal.value;
+              const cy = pupil.cy.baseVal.value;
+              return transform.startsWith(`translate(${cx} ${cy}) scale(1 ${scale[1]})`);
+            });
+            window.clearInterval(coordinateTimer);
+            window.clearTimeout(timeout);
+            observer.disconnect();
+            resolve({ detected: true, centered });
+          }
+        });
+        const timeout = window.setTimeout(() => {
+          window.clearInterval(coordinateTimer);
+          observer.disconnect();
+          resolve({ detected: false, centered: false });
+        }, 11_000);
+        observer.observe(pupils[0].ownerSVGElement!, {
+          attributes: true,
+          attributeFilter: ["transform"],
+          subtree: true,
+        });
+      }),
+  );
+  const observedBlink = await blinkState;
+  expect(observedBlink.detected).toBe(true);
+  expect(observedBlink.centered).toBe(true);
+  expect(pageErrors).toEqual([]);
+  await expect(page.locator("#ojo-izq")).not.toHaveAttribute("transform", /scale/);
+  await expect(page.locator("#ojo-der")).not.toHaveAttribute("transform", /scale/);
+});
+
+test("does not blink when reduced motion is enabled", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const transformChanges = await page.evaluate(
+    () =>
+      new Promise<number>((resolve) => {
+        const pupils = document.querySelector(".personaje svg");
+        let changes = 0;
+        const observer = new MutationObserver((mutations) => {
+          changes += mutations.filter((mutation) => mutation.attributeName === "transform").length;
+        });
+        observer.observe(pupils!, {
+          attributes: true,
+          attributeFilter: ["transform"],
+          subtree: true,
+        });
+        window.setTimeout(() => {
+          observer.disconnect();
+          resolve(changes);
+        }, 9_500);
+      }),
+  );
+  expect(transformChanges).toBe(0);
+
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  const blinkAfterPreferenceChange = await page.evaluate(
+    () =>
+      new Promise<boolean>((resolve) => {
+        const svg = document.querySelector(".personaje svg");
+        const observer = new MutationObserver((mutations) => {
+          if (mutations.some((mutation) => mutation.attributeName === "transform")) {
+            window.clearTimeout(timeout);
+            observer.disconnect();
+            resolve(true);
+          }
+        });
+        const timeout = window.setTimeout(() => {
+          observer.disconnect();
+          resolve(false);
+        }, 10_500);
+        observer.observe(svg!, {
+          attributes: true,
+          attributeFilter: ["transform"],
+          subtree: true,
+        });
+      }),
+  );
+  expect(blinkAfterPreferenceChange).toBe(true);
+});
+
+test("preserves tilt on desktop and keeps touch cards neutral", async ({ browser, page }) => {
+  await page.goto("/");
+  const card = page.locator(".about-card");
+  await card.scrollIntoViewIfNeeded();
+  const bounds = await card.boundingBox();
+  if (!bounds) {
+    throw new Error("La tarjeta de perfil no tiene límites visibles.");
+  }
+  await page.mouse.move(bounds.x + 1, bounds.y + 1);
+  await expect
+    .poll(() => card.evaluate((element) => getComputedStyle(element).transform))
+    .not.toBe("none");
+  await page.mouse.move(0, 0);
+  await expect
+    .poll(() =>
+      card.evaluate((element) => {
+        const matrix = new DOMMatrixReadOnly(getComputedStyle(element).transform);
+        return Math.abs(matrix.m11 - 1) + Math.abs(matrix.m22 - 1) + Math.abs(matrix.m33 - 1);
+      }),
+    )
+    .toBeLessThan(0.01);
+
+  const touchContext = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    isMobile: true,
+    hasTouch: true,
+  });
+  const touchPage = await touchContext.newPage();
+  await touchPage.goto(new URL("/", page.url()).toString());
+  const touchCard = touchPage.locator(".about-card");
+  await touchCard.scrollIntoViewIfNeeded();
+  await touchPage.evaluate(() => {
+    document.querySelector(".about-card")?.dispatchEvent(
+      new PointerEvent("pointermove", {
+        pointerType: "touch",
+        clientX: 10,
+        clientY: 10,
+      }),
+    );
+  });
+  await expect
+    .poll(() =>
+      touchCard.evaluate((element) => {
+        const matrix = new DOMMatrixReadOnly(getComputedStyle(element).transform);
+        return Math.abs(matrix.m11 - 1) + Math.abs(matrix.m22 - 1) + Math.abs(matrix.m33 - 1);
+      }),
+    )
+    .toBeLessThan(0.01);
+  await touchContext.close();
+});
+
 // Conserva sección y tema al navegar entre idiomas y evita repetir la introducción.
 test("preserves section and theme across language changes without replaying the intro", async ({
   page,

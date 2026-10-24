@@ -3,7 +3,7 @@ import { gsap } from "gsap";
 // Ajustá estos valores para cambiar la frecuencia y duración total del parpadeo.
 const MIN_BLINK_INTERVAL_MS = 5_000;
 const MAX_BLINK_INTERVAL_MS = 9_000;
-const BLINK_DURATION_MS = 150;
+const BLINK_DURATION_MS = 250;
 
 const activeCleanups = new WeakMap<Document, () => void>();
 
